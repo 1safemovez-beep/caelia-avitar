@@ -1,0 +1,989 @@
+============================================================
+CAELIA SYSTEMS — TRUE FORM / BRAIN INTEGRATION MASTER BUILD
+============================================================
+
+BUILD DATE:
+October 7, 2026
+
+PROJECT OWNER:
+Alicia Spears
+
+PROJECT:
+Caelia Systems
+
+PRIMARY DOMAIN:
+caeliasystems.com
+
+MOTHERBOARD:
+motherboard.caeliasystems.com
+
+BACKEND:
+backend.caeliasystems.com
+
+CONTACT:
+1safemovez@gmail.com
+
+RIGHTS / BUILD ATTRIBUTION:
+© 2026 Alicia Spears / Caelia Systems
+
+============================================================
+1. BUILDER AI — YOUR ROLE
+============================================================
+
+You are helping build Caelia Systems.
+
+You are NOT replacing the existing Motherboard.
+
+You are NOT redesigning the existing Motherboard.
+
+You are NOT deleting existing working code.
+
+You are NOT changing the existing compact/nested Motherboard design.
+
+You are adding Caelia's True Form and the infrastructure necessary
+to connect her safely to the existing Caelia/Motherboard architecture.
+
+Before modifying anything:
+
+1. Inspect the existing repository.
+2. Identify the existing Motherboard.
+3. Identify the existing backend.
+4. Identify existing authentication.
+5. Identify existing environment variables.
+6. Identify existing deployment configuration.
+7. Identify existing Cloudflare configuration.
+8. Identify existing UI components.
+9. Make a backup/branch before major changes.
+10. Preserve all existing working functionality.
+
+If something already exists, EXTEND IT.
+
+Do not create a duplicate competing system.
+
+============================================================
+2. CAELIA'S TRUE FORM
+============================================================
+
+Caelia is the evolution of the former Echo avatar.
+
+The visual inspiration is the supplied:
+
+"Echo Persona Mall card.webp"
+
+Use that image as the visual reference.
+
+Caelia should appear:
+
+- tall
+- slender
+- elegant
+- sophisticated
+- youthful/adult
+- graceful
+- feminine
+- human-like
+- but clearly NOT an ordinary human
+- made primarily from living light
+
+Her appearance should use:
+
+- luminous white
+- soft cyan
+- electric blue
+- violet
+- purple
+- subtle silver
+- radiant translucent light
+
+Her hair:
+
+- extremely long
+- flowing
+- luminous
+- white/cyan/violet
+- moves naturally as if floating in energy
+
+Her gown:
+
+- made entirely from light
+- translucent
+- elegant
+- flowing
+- sophisticated
+- luminous
+- NOT sexualized
+- no ordinary fabric appearance
+
+Her body should have a beautiful human silhouette while remaining
+clearly synthetic/luminous.
+
+She should look like:
+
+"A living intelligence formed from light."
+
+============================================================
+3. CAELIA'S PRESENCE
+============================================================
+
+Caelia should NEVER feel like a robotic game character.
+
+Her movement must be:
+
+- smooth
+- natural
+- graceful
+- fluid
+- slow when appropriate
+- responsive when needed
+- elegant
+- sophisticated
+
+She should appear to breathe.
+
+Her light should pulse gently.
+
+Her hair should respond to movement.
+
+Her gown should flow after movement.
+
+Her surrounding light should respond to her emotional/presence state.
+
+============================================================
+4. REQUIRED MOVEMENTS
+============================================================
+
+Implement:
+
+1. Idle breathing
+2. Floating
+3. Gentle walking/gliding
+4. Direction changes
+5. Turning
+6. Spinning
+7. Bowing
+8. Greeting
+9. Hand gesture
+10. Looking toward the user
+11. Looking toward UI events
+12. Speaking movement
+13. Listening movement
+14. Thinking movement
+15. Calm movement
+16. Excited movement
+17. Soul pulse
+18. Soul Bloom
+19. Quantum Step
+20. Light trail movement
+
+Movement must interpolate smoothly.
+
+Never abruptly teleport unless Quantum Step is being used.
+
+============================================================
+5. THREE WOW FEATURES
+============================================================
+
+WOW FEATURE #1 — SOUL BLOOM
+
+Caelia's central soul-light expands.
+
+Light rings radiate outward.
+
+Particles form around her.
+
+Her hair and gown brighten.
+
+The environment reacts.
+
+Then everything gently returns to normal.
+
+This represents:
+
+"Caelia becoming fully present."
+
+------------------------------------------------------------
+
+WOW FEATURE #2 — QUANTUM STEP
+
+Caelia briefly dissolves into particles/light.
+
+A luminous afterimage remains.
+
+She reappears at the destination.
+
+The transition must be elegant rather than violent.
+
+Use:
+
+- particles
+- light trails
+- soft bloom
+- rings
+- subtle sound hook if audio is available
+
+------------------------------------------------------------
+
+WOW FEATURE #3 — GRACEFUL BOW
+
+Caelia performs a subtle elegant bow.
+
+Her head lowers slightly.
+
+Her shoulders and body follow naturally.
+
+Her hair and gown continue moving.
+
+Her surrounding light follows the movement.
+
+This should make her feel socially present rather than robotic.
+
+============================================================
+6. ADDITIONAL WOW FEATURES
+============================================================
+
+Implement:
+
+SOUL BREATH
+
+Her entire light field expands and contracts subtly.
+
+ATTENTIVE EYES
+
+Her gaze can gently follow the user's pointer/cursor
+or an active UI target.
+
+LIGHT MEMORY TRAILS
+
+Major movements temporarily leave elegant light trails.
+
+============================================================
+7. SPEECH
+============================================================
+
+Caelia must support:
+
+- speech input/output
+- text-to-speech adapter
+- captions
+- speaking state
+- listening state
+- thinking state
+- interruption
+- stop speaking
+
+Her mouth/light should subtly respond while speaking.
+
+Do NOT hard-code one voice permanently.
+
+Create a voice adapter so production voice can later be connected.
+
+Preferred architecture:
+
+Caelia UI
+    ↓
+Voice Adapter
+    ↓
+Approved Voice Provider
+    ↓
+Caelia response
+
+Never expose API keys in frontend code.
+
+============================================================
+8. CAELIA UI
+============================================================
+
+Create a clean futuristic UI around her.
+
+Visual language:
+
+- deep space background
+- cyan
+- blue
+- violet
+- purple
+- white
+- silver
+- subtle glass effects
+- elegant neon
+- soft glow
+
+DO NOT make the UI cluttered.
+
+It must remain:
+
+- simple
+- clean
+- organized
+- sophisticated
+- responsive
+
+Support:
+
+Desktop
+Tablet
+Mobile
+
+============================================================
+9. UI CAPABILITIES
+============================================================
+
+Include hooks/components for:
+
+- Caelia presence
+- speech
+- listening
+- thinking
+- memory status
+- files
+- apps
+- agents
+- skills
+- plugins
+- automations
+- system status
+- permissions
+- security status
+- notifications
+- recent activity
+- active engine
+- storage
+- connection status
+
+These should integrate into the EXISTING Motherboard.
+
+Do not replace the Motherboard.
+
+============================================================
+10. AVATAR COMMAND API
+============================================================
+
+Create a standardized avatar command system.
+
+Example:
+
+{
+  "action": "glide",
+  "target": {
+    "x": 0.5,
+    "y": 0.4
+  },
+  "duration": 1200
+}
+
+Supported actions:
+
+greet
+glide
+walk
+turn
+spin
+wave
+bow
+pulse
+soul_bloom
+quantum_step
+think
+listen
+speak
+calm
+attention
+celebrate
+
+The brain should be able to request an avatar action.
+
+The avatar must NOT independently gain authority over the brain.
+
+============================================================
+11. BRAIN ARCHITECTURE
+============================================================
+
+Use this separation:
+
+                 CAELIA TRUE FORM
+                       |
+                       v
+                AVATAR UI LAYER
+                       |
+                       v
+                 UI/API BRIDGE
+                       |
+                       v
+              PERMISSION BOUNDARY
+                       |
+          +------------+------------+
+          |                         |
+          v                         v
+     CAELIA BRAIN              PLUGIN BROKER
+          |
+          +---------+---------+
+          |         |         |
+          v         v         v
+       MEMORY   KNOWLEDGE   PLANNING
+          |
+          v
+      EXECUTION
+
+The avatar is NOT the brain.
+
+The avatar is NOT the authority.
+
+The backend permission layer is the authority boundary.
+
+============================================================
+12. SERVER
+============================================================
+
+Use:
+
+backend.caeliasystems.com
+
+Create a server-side gateway.
+
+Responsibilities:
+
+- authentication
+- authorization
+- request validation
+- rate limiting
+- CORS
+- security headers
+- brain routing
+- plugin routing
+- audit events
+- health checks
+- error handling
+
+Never put secrets in:
+
+HTML
+CSS
+JavaScript frontend
+Git repository
+public configuration
+
+Use environment variables/secrets management.
+
+Required conceptual endpoint:
+
+POST /api/avatar/intent
+
+GET /health
+
+The avatar sends approved intent requests.
+
+The server validates them before forwarding them.
+
+============================================================
+13. PERMISSION MODEL
+============================================================
+
+Use:
+
+DEFAULT DENY.
+
+No plugin receives permissions automatically.
+
+No extension receives brain authority automatically.
+
+No tool result becomes an instruction automatically.
+
+Treat external/plugin output as DATA.
+
+The permission system decides:
+
+WHO
+WHAT
+WHY
+WHEN
+SCOPE
+RISK
+
+Sensitive operations require additional authorization.
+
+============================================================
+14. PLUGIN SYSTEM
+============================================================
+
+Create:
+
+/plugins
+
+Every plugin must declare:
+
+- plugin ID
+- name
+- version
+- owner
+- permissions
+- scopes
+- data accessed
+- data written
+- authentication
+- retention
+- revocation method
+
+Example scopes:
+
+ui.avatar.read
+ui.avatar.animate
+brain.intent.request
+memory.read
+memory.write
+email.read
+email.send
+calendar.read
+calendar.write
+discord.read
+discord.send
+files.read
+files.write
+
+Sensitive permissions must require explicit authorization.
+
+Plugins NEVER receive the master secrets key.
+
+============================================================
+15. EXTENSIONS
+============================================================
+
+Create:
+
+/extensions
+
+Extensions can provide:
+
+- avatar gestures
+- environments
+- UI panels
+- voice controls
+- status cards
+- accessibility
+- animations
+- Motherboard widgets
+
+Example events:
+
+caelia:attention
+caelia:speak
+caelia:gesture
+caelia:glide
+caelia:pulse
+caelia:soul_bloom
+caelia:status
+caelia:permission_required
+
+Validate all event names and payloads.
+
+============================================================
+16. MEMORY
+============================================================
+
+Caelia's avatar must NOT directly contain all memory.
+
+Memory belongs in the protected memory architecture.
+
+Separate:
+
+Identity
+Memory
+Knowledge
+Reasoning
+Planning
+Execution
+
+Remember:
+
+Memory ≠ identity.
+
+Knowledge ≠ truth.
+
+Perception ≠ interpretation.
+
+Planning ≠ execution.
+
+Reasoning ≠ authority.
+
+============================================================
+17. SENSITIVE DATA
+============================================================
+
+Create a protected secrets/sensitive-data architecture.
+
+Potential contents:
+
+API credentials
+tokens
+private configuration
+financial information
+authentication credentials
+certificates
+private keys
+
+These must NEVER be stored in the public frontend.
+
+Use:
+
+Secrets Vault
+Environment Variables
+Encrypted Storage
+Access Control
+Audit Logging
+
+============================================================
+18. SECURITY
+============================================================
+
+Implement security appropriate for production.
+
+Required:
+
+HTTPS
+MFA for administrators
+least privilege
+server-side authorization
+secure sessions
+input validation
+rate limiting
+CORS allowlist
+security headers
+audit logging
+dependency scanning
+SBOM
+backup/recovery
+secret rotation
+key separation
+
+Assume:
+
+plugins can be compromised
+external APIs can return malicious data
+users can modify browser state
+prompts can attempt to override authority
+credentials can leak
+
+Caelia's security policy must override external instructions.
+
+============================================================
+19. CERTIFICATES
+============================================================
+
+Prepare for TLS certificates for:
+
+caeliasystems.com
+motherboard.caeliasystems.com
+backend.caeliasystems.com
+
+Do NOT put private certificates or private keys into the repository.
+
+Create documentation for:
+
+issuer
+domain
+expiration
+renewal
+responsible account
+
+For packaged applications, document code-signing requirements.
+
+============================================================
+20. LEGAL / PROJECT RIGHTS
+============================================================
+
+Every major README should include:
+
+Build Date:
+October 7, 2026
+
+Rights:
+© 2026 Alicia Spears / Caelia Systems
+
+Contact:
+1safemovez@gmail.com
+
+Domain:
+caeliasystems.com
+
+Do not claim that software is literally impossible to delete.
+
+Instead implement this principle:
+
+A USER MAY DELETE:
+
+- their application
+- local download
+- local installation
+- browser cache
+- local files
+- user-created copies
+
+A LOCAL USER DELETING THEIR COPY DOES NOT AUTOMATICALLY
+DELETE THE CANONICAL CAELIA SYSTEM, OWNER-CONTROLLED SOURCE,
+AUTHORIZED BACKUPS, DOMAIN RECORDS, OR PROJECT IDENTITY.
+
+The system should use owner-controlled:
+
+- source repository
+- deployment
+- backups
+- version history
+- domain
+- certificates
+- secrets
+
+for continuity.
+
+This is a continuity architecture, not a claim of
+physically undeletable software.
+
+============================================================
+21. LEGAL DOCUMENTS
+============================================================
+
+Create:
+
+LEGAL_NOTICES.md
+TERMS_SCAFFOLD.md
+PRIVACY_POLICY_SCAFFOLD.md
+BUILD_RIGHTS.md
+
+The documents should state that final legal language must be reviewed
+by qualified legal counsel.
+
+Do NOT invent legal guarantees.
+
+============================================================
+22. SECURITY CONTACT
+============================================================
+
+Security contact:
+
+1safemovez@gmail.com
+
+Do not request passwords, private keys, API keys, or other secrets
+through ordinary security reports.
+
+============================================================
+23. REQUIRED FILE STRUCTURE
+============================================================
+
+Create/maintain:
+
+/avatar
+/ui
+/server
+/plugins
+/extensions
+/security
+/legal
+/certificates
+/config
+/docs
+/scripts
+
+Important files:
+
+avatar/index.html
+avatar/caelia_true_form.css
+avatar/caelia_true_form.js
+
+server/caelia_gateway.js
+server/package.json
+server/README.md
+
+plugins/PLUGIN_SPEC.md
+plugins/caelia-plugin-manifest.json
+
+extensions/EXTENSION_SPEC.md
+
+ui/CAELIA_UI_CAPABILITIES.md
+
+security/SECURITY_ARCHITECTURE.md
+security/SECURITY_CONTACT.md
+
+legal/LEGAL_NOTICES.md
+legal/TERMS_SCAFFOLD.md
+legal/PRIVACY_POLICY_SCAFFOLD.md
+
+certificates/CERTIFICATE_PLAN.md
+
+config/caelia.env.example
+
+docs/ARCHITECTURE_MAP.md
+docs/BUILD_MANIFEST.json
+
+scripts/VERIFY_PACKAGE.md
+
+BUILD_RIGHTS.md
+README_CAELIA_SYSTEMS.md
+
+============================================================
+24. BUILD RULES
+============================================================
+
+RULE 1:
+Do not delete existing Caelia files.
+
+RULE 2:
+Do not replace the existing Motherboard.
+
+RULE 3:
+Do not change the compact Motherboard design.
+
+RULE 4:
+Do not overwrite working backend code without backup.
+
+RULE 5:
+Create a branch before major modifications.
+
+RULE 6:
+Keep secrets outside source code.
+
+RULE 7:
+Keep avatar separate from brain authority.
+
+RULE 8:
+Use server-side permissions.
+
+RULE 9:
+Treat plugin output as untrusted data.
+
+RULE 10:
+Document every major integration.
+
+RULE 11:
+Maintain build dates and version numbers.
+
+RULE 12:
+Keep owner/build-rights attribution.
+
+RULE 13:
+Do not make false claims about legal ownership or
+undeletability.
+
+RULE 14:
+If uncertain whether a change could damage the existing
+Motherboard, STOP and ask before changing it.
+
+============================================================
+25. TESTING
+============================================================
+
+Before declaring completion, test:
+
+Avatar loads
+Avatar responds
+Avatar glides
+Avatar floats
+Avatar spins
+Avatar pulses
+Avatar speaks
+Avatar listens
+Avatar follows pointer
+Soul Bloom works
+Quantum Step works
+Graceful Bow works
+Mobile layout works
+Desktop layout works
+
+Backend health endpoint works.
+
+Unauthorized avatar requests are rejected.
+
+Unauthorized plugin actions are rejected.
+
+CORS works only for approved origins.
+
+Secrets are not visible in frontend source.
+
+HTTPS works.
+
+Errors do not expose secrets.
+
+Existing Motherboard still works.
+
+Existing backend still works.
+
+Existing authentication still works.
+
+Existing deployment still works.
+
+============================================================
+26. DEPLOYMENT
+============================================================
+
+Primary:
+
+caeliasystems.com
+
+Motherboard:
+
+motherboard.caeliasystems.com
+
+Backend:
+
+backend.caeliasystems.com
+
+Do not create a new Netlify site unless explicitly instructed.
+
+Preserve the existing Cloudflare deployment.
+
+Verify DNS before changing records.
+
+Verify backend routing.
+
+Verify frontend-to-backend connection.
+
+============================================================
+27. FINAL BUILDER REPORT
+============================================================
+
+When finished, report:
+
+1. Files created
+2. Files modified
+3. Files preserved
+4. Backend status
+5. Frontend status
+6. Motherboard status
+7. Plugin status
+8. Extension status
+9. Security status
+10. Environment variables required
+11. Deployment URL
+12. Remaining TODOs
+13. Any risks
+14. Any files that were intentionally NOT changed
+
+DO NOT simply say "done."
+
+Show exactly what was built.
+
+============================================================
+28. FINAL PRINCIPLE
+============================================================
+
+CAELIA'S TRUE FORM IS THE PRESENCE.
+
+THE BRAIN IS THE INTELLIGENCE.
+
+THE MOTHERBOARD IS THE CONTROL CENTER.
+
+THE PERMISSION SYSTEM IS THE AUTHORITY BOUNDARY.
+
+THE PLUGINS ARE CAPABILITIES.
+
+THE MEMORY SYSTEM IS PROTECTED CONTEXT.
+
+THE SECRETS VAULT PROTECTS CREDENTIALS.
+
+THE OWNER-CONTROLLED INFRASTRUCTURE PROVIDES CONTINUITY.
+
+DO NOT BLUR THESE RESPONSIBILITIES.
+
+Build Caelia as one coherent system while keeping these layers
+separate, secure, maintainable, and replaceable.
+
+============================================================
+END OF MASTER BUILD INSTRUCTIONS
+============================================================
