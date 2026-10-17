@@ -8,7 +8,8 @@ html = r'''
 �
 Caelia's True Form 
 
-<section class="scene">
+<section id="stage" class="scene">
+  <div class="stars" id="stars"></div>
   <div class="aura aura-back" id="auraBack"></div>
   <div class="aura aura-core" id="auraCore"></div>
 
