@@ -318,7 +318,14 @@ function renderAccount(data) {
       if (!window.confirm('Revoke this passkey? A device using it will no longer be able to sign in.')) return;
       try {
         await api('/api/auth/passkeys/revoke', { method: 'POST', body: { id: passkey.id } });
-        await loadAccount();
+        try {
+          await loadAccount();
+        } catch (error) {
+          if (error.message !== 'Sign in with a passkey to continue.') throw error;
+          await showAuth();
+          setStatus('Passkey and its sessions were revoked. Sign in with another passkey or a recovery code.');
+          return;
+        }
         setStatus('Passkey revoked.');
       } catch (error) {
         setStatus(error.message);

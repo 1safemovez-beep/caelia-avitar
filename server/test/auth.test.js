@@ -9,6 +9,7 @@ const enrollmentCode = 'a'.repeat(40);
 
 function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {}) {
   const calls = [];
+  let authenticationVerificationHook = null;
   const webauthn = {
     async generateRegistrationOptions() {
       return { challenge: 'registration-challenge', user: { id: 'user-id' } };
@@ -33,6 +34,7 @@ function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {})
     },
     async verifyAuthenticationResponse(options) {
       assert.equal(options.expectedChallenge, 'authentication-challenge');
+      if (authenticationVerificationHook) await authenticationVerificationHook();
       return {
         verified: true,
         authenticationInfo: { newCounter: 1 },
@@ -106,7 +108,14 @@ function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {})
         }
         return { response, json, text };
       }
-      resolve({ request, app, calls });
+      resolve({
+        request,
+        app,
+        calls,
+        setAuthenticationVerificationHook(hook) {
+          authenticationVerificationHook = hook;
+        },
+      });
     });
   });
 }
@@ -140,6 +149,32 @@ test('new owner enrollment is closed without an out-of-band bootstrap code', asy
   });
   assert.equal(enrollment.response.status, 403);
   assert.equal(enrollment.json.error, 'The enrollment code was not accepted.');
+});
+
+test('a passkey revoked during verification cannot create a session', async (t) => {
+  const { request, app, setAuthenticationVerificationHook } = await createHarness(t);
+  await request('/api/auth/register/options', {
+    method: 'POST',
+    body: { username: 'alicia', enrollmentCode },
+  });
+  const registered = await request('/api/auth/register/verify', {
+    method: 'POST',
+    body: { id: 'test-credential-id', response: { transports: ['internal'] } },
+  });
+  assert.equal(registered.response.status, 201);
+  await request('/api/auth/logout', { method: 'POST', body: {} });
+
+  await request('/api/auth/login/options', { method: 'POST', body: {} });
+  setAuthenticationVerificationHook(() => {
+    app.locals.db.prepare('DELETE FROM credentials WHERE credential_id = ?')
+      .run('test-credential-id');
+  });
+  const login = await request('/api/auth/login/verify', {
+    method: 'POST',
+    body: { id: 'test-credential-id', response: {} },
+  });
+  assert.equal(login.response.status, 401);
+  assert.equal(app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count, 0);
 });
 
 test('passkey enrollment, private preferences, avatar intents, recovery, and session revocation work', async (t) => {
@@ -247,6 +282,11 @@ test('passkey enrollment, private preferences, avatar intents, recovery, and ses
     body: { id: accountState.json.passkeys[0].id },
   });
   assert.equal(revokedPasskey.response.status, 200);
+  assert.equal((await request('/api/me')).response.status, 401);
+  await request('/api/auth/recovery', {
+    method: 'POST',
+    body: { username: 'alicia', code: rotatedCodes.json.recoveryCodes[0] },
+  });
   assert.equal((await request('/api/me')).json.passkeys.length, 0);
 
   const replacementOptions = await request('/api/auth/passkey/register/options', {

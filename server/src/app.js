@@ -102,12 +102,18 @@ function openDatabase(databasePath) {
     CREATE TABLE IF NOT EXISTS sessions (
       token_hash TEXT PRIMARY KEY,
       account_id TEXT NOT NULL REFERENCES accounts(id) ON DELETE CASCADE,
+      credential_db_id TEXT REFERENCES credentials(id) ON DELETE CASCADE,
       created_at INTEGER NOT NULL,
       expires_at INTEGER NOT NULL
     );
     CREATE INDEX IF NOT EXISTS sessions_account_id ON sessions(account_id);
     CREATE INDEX IF NOT EXISTS credentials_account_id ON credentials(account_id);
   `);
+  const sessionColumns = db.pragma('table_info(sessions)');
+  if (!sessionColumns.some((column) => column.name === 'credential_db_id')) {
+    db.exec('ALTER TABLE sessions ADD COLUMN credential_db_id TEXT REFERENCES credentials(id) ON DELETE CASCADE');
+  }
+  db.exec('CREATE INDEX IF NOT EXISTS sessions_credential_db_id ON sessions(credential_db_id)');
   return db;
 }
 
@@ -257,12 +263,12 @@ export function createApp({
     next();
   }
 
-  function createSession(response, accountId) {
+  function createSession(response, accountId, credentialDbId = null) {
     const token = randomBytes(32).toString('base64url');
     const createdAt = Date.now();
     db.prepare(
-      'INSERT INTO sessions (token_hash, account_id, created_at, expires_at) VALUES (?, ?, ?, ?)',
-    ).run(tokenHash(token), accountId, createdAt, createdAt + sessionLifetimeSeconds * 1000);
+      'INSERT INTO sessions (token_hash, account_id, credential_db_id, created_at, expires_at) VALUES (?, ?, ?, ?, ?)',
+    ).run(tokenHash(token), accountId, credentialDbId, createdAt, createdAt + sessionLifetimeSeconds * 1000);
     setCookie(response, sessionCookieName, token, {
       secure: secureCookies,
       maxAge: sessionLifetimeSeconds,
@@ -552,12 +558,26 @@ export function createApp({
       if (!verification.verified) {
         return response.status(401).json({ error: 'Passkey sign-in failed. Try again or use a recovery code.' });
       }
-      db.prepare('UPDATE credentials SET counter = ?, last_used_at = ? WHERE id = ?')
-        .run(verification.authenticationInfo.newCounter, Date.now(), stored.id);
-      createSession(response, stored.account_id);
-      const account = db.prepare(
-        'SELECT id, username, display_name, recognition_phrase FROM accounts WHERE id = ?',
-      ).get(stored.account_id);
+      const finalizeAuthentication = db.transaction(() => {
+        const currentCredential = db.prepare(
+          'SELECT account_id, counter FROM credentials WHERE id = ?',
+        ).get(stored.id);
+        if (
+          !currentCredential ||
+          currentCredential.account_id !== stored.account_id ||
+          currentCredential.counter !== stored.counter
+        ) return null;
+        db.prepare('UPDATE credentials SET counter = ?, last_used_at = ? WHERE id = ?')
+          .run(verification.authenticationInfo.newCounter, Date.now(), stored.id);
+        createSession(response, currentCredential.account_id, stored.id);
+        return db.prepare(
+          'SELECT id, username, display_name, recognition_phrase FROM accounts WHERE id = ?',
+        ).get(currentCredential.account_id);
+      });
+      const account = finalizeAuthentication.immediate();
+      if (!account) {
+        return response.status(401).json({ error: 'Passkey sign-in failed. Try again or use a recovery code.' });
+      }
       return response.json({ account: serializeAccount(account) });
     } catch (error) {
       return next(error);
