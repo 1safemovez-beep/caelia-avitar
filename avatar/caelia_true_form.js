@@ -298,7 +298,35 @@ function renderAccount(data) {
   document.querySelector('#displayName').value = account.displayName;
   document.querySelector('#recognitionPhrase').value = account.recognitionPhrase;
   const passkeys = data.passkeys || [];
-  document.querySelector('#passkeyList').textContent = `${passkeys.length} passkey${passkeys.length === 1 ? '' : 's'} registered`;
+  const passkeyList = document.querySelector('#passkeyList');
+  passkeyList.replaceChildren();
+  if (passkeys.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'small';
+    empty.textContent = 'No passkeys registered. Add one now so you can sign in again.';
+    passkeyList.append(empty);
+  }
+  for (const passkey of passkeys) {
+    const row = document.createElement('div');
+    row.className = 'passkey-item';
+    const name = document.createElement('span');
+    name.textContent = `${passkey.name} · added ${new Date(passkey.createdAt).toLocaleDateString()}`;
+    const revoke = document.createElement('button');
+    revoke.type = 'button';
+    revoke.textContent = 'Revoke';
+    revoke.addEventListener('click', async () => {
+      if (!window.confirm('Revoke this passkey? A device using it will no longer be able to sign in.')) return;
+      try {
+        await api('/api/auth/passkeys/revoke', { method: 'POST', body: { id: passkey.id } });
+        await loadAccount();
+        setStatus('Passkey revoked.');
+      } catch (error) {
+        setStatus(error.message);
+      }
+    });
+    row.append(name, revoke);
+    passkeyList.append(row);
+  }
   loadVoices();
 }
 

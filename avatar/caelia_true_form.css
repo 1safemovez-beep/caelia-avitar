@@ -112,6 +112,9 @@ h2 { margin-bottom: 15px; font-size: 1.12rem; font-weight: 500; }
 .voice-row select { flex: 1; }
 .voice-row input[type=range] { width: 100px; padding: 0; accent-color: var(--cyan); }
 .account-grid { margin-top: 14px; }
+.passkeys-list { display: grid; gap: 8px; margin: 12px 0; }
+.passkey-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 10px; border: 1px solid rgb(176 227 255 / 12%); border-radius: 10px; color: #b8c9dc; font-size: .82rem; }
+.passkey-item button { min-height: 34px; padding: 6px 10px; color: #ffd9e0; font-size: .75rem; }
 .recovery-notice { position: absolute; z-index: 2; top: 16px; left: 50%; width: min(520px, calc(100% - 28px)); padding: 18px; border: 1px solid rgb(255 222 146 / 40%); border-radius: 16px; background: #16182a; box-shadow: 0 12px 40px #0008; transform: translateX(-50%); }
 .recovery-notice p { margin: 8px 0; color: #d0c4a5; font-size: .82rem; }
 .recovery-notice pre { max-height: 120px; overflow: auto; padding: 10px; border-radius: 9px; background: #090c18; color: #d9f9ff; white-space: pre-wrap; }

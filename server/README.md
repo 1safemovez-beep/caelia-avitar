@@ -66,6 +66,7 @@ These are explicit adapter contracts, not claims that those services already exi
 - `POST /api/auth/passkey/register/options`, `/api/auth/passkey/register/verify` — add a passkey while signed in.
 - `GET` / `PATCH /api/me` — read/update account preferences.
 - `POST /api/auth/recovery-codes` — rotate one-use recovery codes.
+- `POST /api/auth/passkeys/revoke` — revoke a lost or compromised passkey while signed in; the final remaining recovery method cannot be removed.
 - `POST /api/auth/logout`, `/api/auth/revoke-sessions` — sign out here or revoke every session.
 - `POST /api/avatar/intent` — authenticated, allowlisted presentation actions with bounded target and duration.
 

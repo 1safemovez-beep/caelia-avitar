@@ -228,6 +228,39 @@ test('passkey enrollment, private preferences, avatar intents, recovery, and ses
   });
   assert.equal(loggedIn.response.status, 200);
 
+  const accountState = await request('/api/me');
+  assert.equal(accountState.json.passkeys.length, 1);
+  app.locals.db.prepare('DELETE FROM recovery_codes').run();
+  const blockedRevocation = await request('/api/auth/passkeys/revoke', {
+    method: 'POST',
+    body: { id: accountState.json.passkeys[0].id },
+  });
+  assert.equal(blockedRevocation.response.status, 409);
+  const rotatedCodes = await request('/api/auth/recovery-codes', {
+    method: 'POST',
+    body: {},
+  });
+  assert.equal(rotatedCodes.json.recoveryCodes.length, 10);
+
+  const revokedPasskey = await request('/api/auth/passkeys/revoke', {
+    method: 'POST',
+    body: { id: accountState.json.passkeys[0].id },
+  });
+  assert.equal(revokedPasskey.response.status, 200);
+  assert.equal((await request('/api/me')).json.passkeys.length, 0);
+
+  const replacementOptions = await request('/api/auth/passkey/register/options', {
+    method: 'POST',
+    body: {},
+  });
+  assert.equal(replacementOptions.response.status, 200);
+  const replacementPasskey = await request('/api/auth/passkey/register/verify', {
+    method: 'POST',
+    body: { id: 'test-credential-id', response: { transports: ['internal'] } },
+  });
+  assert.equal(replacementPasskey.response.status, 201);
+  assert.equal((await request('/api/me')).json.passkeys.length, 1);
+
   const revoked = await request('/api/auth/revoke-sessions', { method: 'POST', body: {} });
   assert.equal(revoked.response.status, 204);
   const noLongerSignedIn = await request('/api/me');

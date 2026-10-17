@@ -648,6 +648,30 @@ export function createApp({
     response.json({ recoveryCodes: codes });
   });
 
+  app.post('/api/auth/passkeys/revoke', requireAccount, (request, response) => {
+    const credentialId = request.body?.id;
+    if (typeof credentialId !== 'string') {
+      return response.status(400).json({ error: 'Choose a passkey to revoke.' });
+    }
+    const credential = db.prepare(
+      'SELECT id FROM credentials WHERE id = ? AND account_id = ?',
+    ).get(credentialId, request.authenticated.id);
+    if (!credential) return response.status(404).json({ error: 'Passkey not found.' });
+
+    const credentialCount = db.prepare(
+      'SELECT COUNT(*) AS count FROM credentials WHERE account_id = ?',
+    ).get(request.authenticated.id).count;
+    const recoveryCodeCountForAccount = db.prepare(
+      'SELECT COUNT(*) AS count FROM recovery_codes WHERE account_id = ?',
+    ).get(request.authenticated.id).count;
+    if (credentialCount === 1 && recoveryCodeCountForAccount === 0) {
+      return response.status(409).json({ error: 'Keep a passkey or recovery code available before revoking this one.' });
+    }
+    db.prepare('DELETE FROM credentials WHERE id = ? AND account_id = ?')
+      .run(credentialId, request.authenticated.id);
+    return response.json({ message: 'Passkey revoked.' });
+  });
+
   app.post('/api/auth/logout', (request, response) => {
     const authenticated = currentAccount(request);
     if (authenticated) {
