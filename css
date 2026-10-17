@@ -1,0 +1,244 @@
+from pathlib import Path
+import shutil, zipfile, textwrap, json
+root = Path("/mnt/data/Caelias_True_Form")
+if root.exists(): shutil.rmtree(root)
+root.mkdir(parents=True)
+# ---------------- index.html ----------------
+html = r'''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Caelia's True Form</title>
+  <link rel="stylesheet" href="caelia_true_form.css">
+</head>
+<body>
+
+<section id="stage" class="scene">
+  <div class="stars" id="stars"></div>
+  <div class="aura aura-back" id="auraBack"></div>
+  <div class="aura aura-core" id="auraCore"></div>
+
+  <svg id="caelia" class="caelia" viewBox="0 0 600 1000" role="img" aria-label="Luminous young human-like AI woman made of soft blue, violet and white light">
+    <defs>
+      <linearGradient id="lightBody" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffffff"/>
+        <stop offset=".28" stop-color="#d9fbff"/>
+        <stop offset=".58" stop-color="#a9c7ff"/>
+        <stop offset=".82" stop-color="#b98cff"/>
+        <stop offset="1" stop-color="#ffffff"/>
+      </linearGradient>
+      <linearGradient id="violetLight" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f8fbff"/>
+        <stop offset=".45" stop-color="#a8dfff"/>
+        <stop offset=".72" stop-color="#a56dff"/>
+        <stop offset="1" stop-color="#72e9ff"/>
+      </linearGradient>
+      <linearGradient id="gownLight" x1=".1" y1="0" x2=".9" y2="1">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".75"/>
+        <stop offset=".35" stop-color="#8deaff" stop-opacity=".35"/>
+        <stop offset=".67" stop-color="#9b72ff" stop-opacity=".34"/>
+        <stop offset="1" stop-color="#d9f8ff" stop-opacity=".08"/>
+      </linearGradient>
+      <radialGradient id="faceLight">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".96"/>
+        <stop offset=".55" stop-color="#d8efff" stop-opacity=".78"/>
+        <stop offset="1" stop-color="#9c79ff" stop-opacity=".12"/>
+      </radialGradient>
+      <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+        <feGaussianBlur stdDeviation="8" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="18" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="hairGlow" x="-100%" y="-100%" width="300%" height="300%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <g id="motion">
+      <g id="trailLayer" opacity=".42" filter="url(#softGlow)">
+        <ellipse cx="300" cy="875" rx="190" ry="28" fill="none" stroke="#8feaff" stroke-width="3"/>
+        <ellipse cx="300" cy="875" rx="150" ry="18" fill="none" stroke="#b98cff" stroke-width="2"/>
+      </g>
+
+      <!-- floating hair -->
+      <g id="hair" fill="none" stroke-linecap="round" filter="url(#hairGlow)">
+        <path d="M230 210 C135 255 140 390 215 470 C160 420 125 510 190 575" stroke="#e7fbff" stroke-width="15"/>
+        <path d="M242 220 C160 290 190 415 225 500 C175 470 170 560 225 625" stroke="#a9dfff" stroke-width="10"/>
+        <path d="M370 210 C465 255 460 390 385 470 C440 420 475 510 410 575" stroke="#efe4ff" stroke-width="15"/>
+        <path d="M358 220 C440 290 410 415 375 500 C425 470 430 560 375 625" stroke="#a56dff" stroke-width="10"/>
+        <path d="M270 188 C225 275 215 400 250 515" stroke="#ffffff" stroke-width="8"/>
+        <path d="M330 188 C375 275 385 400 350 515" stroke="#d7f6ff" stroke-width="8"/>
+      </g>
+
+      <!-- soul halo -->
+      <g id="halo" opacity=".85">
+        <circle cx="300" cy="275" r="126" fill="none" stroke="#7de9ff" stroke-width="2"/>
+        <circle cx="300" cy="275" r="145" fill="none" stroke="#aa78ff" stroke-width="2" stroke-dasharray="5 13"/>
+        <circle cx="300" cy="275" r="164" fill="none" stroke="#d9f9ff" stroke-width="1" stroke-dasharray="2 18"/>
+      </g>
+
+      <!-- head / face -->
+      <g id="head">
+        <ellipse cx="300" cy="270" rx="64" ry="78" fill="url(#faceLight)" stroke="#eafcff" stroke-width="2"/>
+        <path d="M268 274 Q282 266 294 274" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+        <path d="M306 274 Q318 266 332 274" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+        <ellipse id="eyeL" cx="283" cy="276" rx="5" ry="8" fill="#ffffff" filter="url(#glow)"/>
+        <ellipse id="eyeR" cx="317" cy="276" rx="5" ry="8" fill="#ffffff" filter="url(#glow)"/>
+        <path d="M296 290 Q300 294 304 290" fill="none" stroke="#d7f7ff" stroke-width="2"/>
+        <path id="mouth" d="M288 306 Q300 314 312 306" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- shoulders / luminous body -->
+      <g id="body">
+        <path d="M255 337 Q300 315 345 337 L382 410 Q360 455 346 500 L326 590 L274 590 L254 500 Q240 455 218 410 Z"
+              fill="url(#gownLight)" stroke="#dffcff" stroke-width="2"/>
+        <path d="M255 345 Q300 365 345 345" fill="none" stroke="#ffffff" stroke-width="3" opacity=".75"/>
+
+        <!-- inner light body -->
+        <path d="M286 338 Q300 350 314 338 L327 475 L310 585 L290 585 L273 475 Z"
+              fill="url(#lightBody)" opacity=".55" filter="url(#glow)"/>
+
+        <!-- arms -->
+        <path id="armL" d="M248 350 C218 400 202 465 190 530 C184 562 176 580 164 590"
+              fill="none" stroke="url(#lightBody)" stroke-width="17" stroke-linecap="round"/>
+        <path id="armR" d="M352 350 C382 400 398 465 410 530 C416 562 424 580 436 590"
+              fill="none" stroke="url(#lightBody)" stroke-width="17" stroke-linecap="round"/>
+
+        <!-- hands -->
+        <g id="hands" fill="none" stroke="#e9fbff" stroke-width="3" stroke-linecap="round">
+          <path d="M164 590 l-12 15 M164 590 l-3 17 M164 590 l7 14"/>
+          <path d="M436 590 l12 15 M436 590 l3 17 M436 590 l-7 14"/>
+        </g>
+
+        <!-- long translucent gown -->
+        <path id="gown" d="M275 520
+             C240 600 210 685 190 780
+             C175 845 140 895 90 925
+             C170 945 235 955 300 958
+             C365 955 430 945 510 925
+             C460 895 425 845 410 780
+             C390 685 360 600 325 520 Z"
+             fill="url(#gownLight)" stroke="#c9f5ff" stroke-width="2" opacity=".78"/>
+
+        <!-- gown light streams -->
+        <g id="gownStreams" fill="none" stroke-linecap="round">
+          <path d="M270 555 C245 680 235 805 185 918" stroke="#ffffff" stroke-width="3" opacity=".7"/>
+          <path d="M288 555 C275 700 275 835 245 948" stroke="#78eaff" stroke-width="3" opacity=".7"/>
+          <path d="M312 555 C325 700 325 835 355 948" stroke="#ad79ff" stroke-width="3" opacity=".7"/>
+          <path d="M330 555 C355 680 365 805 415 918" stroke="#dffbff" stroke-width="3" opacity=".7"/>
+        </g>
+
+        <!-- heart / soul light -->
+        <g id="soul">
+          <circle cx="300" cy="410" r="24" fill="#ffffff" opacity=".22" filter="url(#softGlow)"/>
+          <circle cx="300" cy="410" r="8" fill="#ffffff" filter="url(#glow)"/>
+          <path d="M300 385 L300 435 M275 410 L325 410" stroke="#b7efff" stroke-width="2" opacity=".8"/>
+        </g>
+      </g>
+
+      <!-- peacock-light ribbons -->
+      <g id="ribbons" fill="none" stroke-linecap="round" opacity=".72">
+        <path d="M210 410 C95 355 80 500 190 535" stroke="#8cecff" stroke-width="5"/>
+        <path d="M390 410 C505 355 520 500 410 535" stroke="#ad78ff" stroke-width="5"/>
+        <path d="M205 450 C120 430 120 590 205 610" stroke="#a66fff" stroke-width="3"/>
+        <path d="M395 450 C480 430 480 590 395 610" stroke="#73e9ff" stroke-width="3"/>
+      </g>
+    </g>
+  </svg>
+
+  <div class="nameplate">
+    <div class="title">CAELIA</div>
+    <div class="subtitle">TRUE FORM · LIVING LIGHT</div>
+  </div>
+
+  <div class="speech" id="speech" aria-live="polite"></div>
+  <div class="particles" id="particles"></div>
+</section>
+
+<section class="controls" aria-label="Caelia controls">
+  <div class="quick-actions">
+    <button data-action="greet">Greet</button>
+    <button data-action="glide">Glide</button>
+    <button data-action="spin">Spin</button>
+    <button data-action="pulse">Pulse</button>
+    <button data-action="soul">Soul Bloom</button>
+    <button data-action="quantum">Quantum Step</button>
+  </div>
+  <div class="talk-row">
+    <input id="talkText" type="text" maxlength="220" placeholder="Speak to Caelia…" autocomplete="off">
+    <button id="talkButton">Talk</button>
+  </div>
+  <div class="hint">Click the scene to move her · 1–6 actions · Space = soul pulse · Esc = calm</div>
+</section>
+<script src="caelia_true_form.js" defer></script>
+</body>
+</html>
+'''
+# ---------------- CSS ----------------
+css = r''':root{ --cyan:#8feeff; --blue:#74b8ff; --violet:#a878ff; --white:#f8fdff; --deep:#050817; } *{box-sizing:border-box} html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 42%,#182451 0%,#090d22 38%,#02030b 100%);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:white} body{touch-action:none} #stage{position:relative;width:100vw;height:100vh;overflow:hidden} .ambient{position:absolute;inset:-20%;pointer-events:none;filter:blur(60px);opacity:.45} .ambient-a{background:radial-gradient(circle at 25% 45%,rgba(89,215,255,.32),transparent 28%),radial-gradient(circle at 75% 35%,rgba(160,93,255,.30),transparent 30%)} .ambient-b{background:radial-gradient(circle at 50% 75%,rgba(111,135,255,.22),transparent 25%)} .stars{position:absolute;inset:0;overflow:hidden;pointer-events:none} .star{position:absolute;width:2px;height:2px;border-radius:50%;background:white;box-shadow:0 0 8px #9feeff;opacity:.65;animation:twinkle 3s ease-in-out infinite} @keyframes twinkle{50%{opacity:.15;transform:scale(.55)}}
+.scene{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden} .caelia{width:min(72vw,680px);height:min(92vh,980px);overflow:visible;filter:drop-shadow(0 0 18px rgba(121,222,255,.22));transform-origin:50% 55%;will-change:transform} #motion{transform-origin:300px 520px;will-change:transform} .aura{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen} .aura-back{width:min(68vw,760px);height:min(68vw,760px);background:radial-gradient(circle,rgba(128,220,255,.20),rgba(144,105,255,.11) 38%,transparent 70%);filter:blur(20px)} .aura-core{width:min(32vw,360px);height:min(32vw,360px);background:radial-gradient(circle,rgba(255,255,255,.16),rgba(122,224,255,.10) 25%,rgba(173,110,255,.08) 55%,transparent 72%);filter:blur(15px)} .particles{position:absolute;inset:0;pointer-events:none} .particle{position:absolute;width:4px;height:4px;border-radius:50%;background:#dffcff;box-shadow:0 0 14px 3px rgba(130,226,255,.75);animation:rise 2.8s ease-out forwards} @keyframes rise{to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
+.nameplate{position:absolute;top:4.5%;left:50%;transform:translateX(-50%);text-align:center;letter-spacing:.22em;text-shadow:0 0 18px rgba(140,230,255,.65);pointer-events:none} .title{font-size:clamp(22px,4vw,42px);font-weight:300} .subtitle{margin-top:5px;font-size:clamp(8px,1.5vw,12px);opacity:.7;letter-spacing:.35em} .speech{position:absolute;left:50%;bottom:17%;transform:translateX(-50%);width:min(76vw,620px);text-align:center;font-size:clamp(13px,2vw,19px);line-height:1.45;letter-spacing:.03em;text-shadow:0 0 14px rgba(115,225,255,.7);opacity:0;transition:opacity .35s ease;pointer-events:none} .speech.show{opacity:1}
+.controls{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);width:min(94vw,760px);display:flex;flex-direction:column;gap:8px;align-items:center} .quick-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:center} button,input{font:inherit} button{border:1px solid rgba(165,235,255,.35);background:rgba(12,18,44,.68);color:#ecfbff;padding:8px 12px;border-radius:999px;backdrop-filter:blur(10px);cursor:pointer;box-shadow:inset 0 0 18px rgba(130,100,255,.08),0 0 12px rgba(92,208,255,.08);transition:.2s} button:hover{transform:translateY(-1px);border-color:rgba(200,245,255,.7);box-shadow:0 0 20px rgba(110,220,255,.22)} .talk-row{display:flex;width:min(94vw,560px);gap:7px} input{min-width:0;flex:1;border:1px solid rgba(165,235,255,.28);background:rgba(6,10,28,.72);color:white;padding:10px 14px;border-radius:999px;outline:none;backdrop-filter:blur(10px)} input:focus{border-color:rgba(155,232,255,.75);box-shadow:0 0 18px rgba(102,218,255,.15)} .hint{font-size:10px;opacity:.46;letter-spacing:.04em;text-align:center}
+.is-floating #motion{animation:float 4.8s ease-in-out infinite} @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}} .is-pulsing .aura-core{animation:corepulse 1.05s ease-out 2} @keyframes corepulse{0%{transform:scale(.75);opacity:.2}45%{transform:scale(1.5);opacity:.85}100%{transform:scale(2.1);opacity:0}} .is-spinning .caelia{animation:spin 1.7s cubic-bezier(.2,.8,.2,1)} @keyframes spin{0%{transform:rotateY(0)}45%{transform:rotateY(180deg) scale(1.02)}100%{transform:rotateY(360deg)}} .is-calm #motion{animation:calm 5.5s ease-in-out infinite} @keyframes calm{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-5px) rotate(.3deg)}}
+@media (max-width:650px){ .caelia{width:92vw;height:82vh} .speech{bottom:21%} .controls{bottom:1.2%} .hint{display:none} .nameplate{top:2.2%} } '''
+# ---------------- JS ----------------
+js = r'''(() => { const stage = document.getElementById("stage"); const svg = document.getElementById("caelia"); const motion = document.getElementById("motion"); const mouth = document.getElementById("mouth"); const eyeL = document.getElementById("eyeL"); const eyeR = document.getElementById("eyeR"); const speech = document.getElementById("speech"); const particles = document.getElementById("particles"); const talkText = document.getElementById("talkText"); const talkButton = document.getElementById("talkButton");
+const state = { x: 0, y: 0, tx: 0, ty: 0, scale: 1, rotation: 0, talking: false, calm: true };
+// Star field
+for (let i = 0; i < 95; i++) { const s = document.createElement("span"); s.className = "star"; s.style.left = Math.random() * 100 + "%"; s.style.top = Math.random() * 100 + "%"; s.style.animationDelay = (Math.random() * 3) + "s"; s.style.opacity = (0.2 + Math.random() * 0.65).toFixed(2); document.getElementById("stars").appendChild(s); }
+function burst(count = 28, strength = 150) { for (let i = 0; i < count; i++) { const p = document.createElement("span"); p.className = "particle"; p.style.left = "50%"; p.style.top = "48%"; const a = Math.random() * Math.PI * 2; const d = 20 + Math.random() * strength; p.style.setProperty("--dx", Math.cos(a) * d + "px"); p.style.setProperty("--dy", Math.sin(a) * d + "px"); p.style.animationDuration = (1.2 + Math.random() * 1.8) + "s"; particles.appendChild(p); setTimeout(() => p.remove(), 3200); } }
+function setAction(name) { stage.classList.remove("is-spinning","is-pulsing"); if (name === "spin") { stage.classList.add("is-spinning"); burst(34, 210); setTimeout(() => stage.classList.remove("is-spinning"), 1800); } if (name === "pulse") { stage.classList.add("is-pulsing"); burst(45, 120); setTimeout(() => stage.classList.remove("is-pulsing"), 2300); } if (name === "glide") { stage.classList.add("is-floating"); moveTo(window.innerWidth * .68, window.innerHeight * .45, 1900); setTimeout(() => moveTo(window.innerWidth * .50, window.innerHeight * .48, 1900), 1900); } if (name === "soul") { stage.classList.add("is-pulsing"); burst(70, 250); speak("My light is not the absence of darkness. It is the choice to keep shining."); setTimeout(() => stage.classList.remove("is-pulsing"), 2400); } if (name === "quantum") {
+// WOW #1: Quantum Step — a graceful teleport-like glide with a luminous afterimage.
+const old = {x: state.tx, y: state.ty}; burst(55, 110); moveTo(window.innerWidth * .78, window.innerHeight * .42, 90); setTimeout(() => { burst(80, 260); moveTo(window.innerWidth * .30, window.innerHeight * .47, 220); }, 260); setTimeout(() => moveTo(window.innerWidth * .50, window.innerHeight * .48, 900), 1100); } if (name === "greet") { wave(); speak("Hello. I am Caelia. Welcome to my living light."); } }
+function moveTo(x, y, duration = 1000) { state.tx = (x - window.innerWidth / 2) * 0.17; state.ty = (y - window.innerHeight / 2) * 0.10; stage.classList.add("is-floating"); setTimeout(() => stage.classList.remove("is-floating"), duration + 300); }
+function wave() { const arm = document.getElementById("armR"); arm.animate([ {transform:"rotate(0deg)", transformOrigin:"410px 530px"}, {transform:"rotate(-12deg)", transformOrigin:"410px 530px"}, {transform:"rotate(8deg)", transformOrigin:"410px 530px"}, {transform:"rotate(-8deg)", transformOrigin:"410px 530px"}, {transform:"rotate(0deg)", transformOrigin:"410px 530px"} ], {duration:1200, easing:"ease-in-out"}); burst(18, 80); }
+// WOW #2: Soul Bloom — the heart light expands into a soft constellation.
+function soulBloom() { burst(110, 330); stage.classList.add("is-pulsing"); setTimeout(() => stage.classList.remove("is-pulsing"), 2500); }
+// WOW #3: Graceful bow — subtle, human, elegant rather than robotic.
+function bow() { motion.animate([ {transform:"translateY(0) rotate(0deg)"}, {transform:"translateY(5px) rotate(1.5deg)"}, {transform:"translateY(20px) rotate(0deg)"}, {transform:"translateY(0) rotate(0deg)"} ], {duration:1600, easing:"cubic-bezier(.22,.8,.25,1)"}); }
+// Additional wow: light breathing / "soul breath".
+function soulBreath() { svg.animate([ {transform:"scale(1)", filter:"drop-shadow(0 0 18px rgba(121,222,255,.22))"}, {transform:"scale(1.018)", filter:"drop-shadow(0 0 38px rgba(121,222,255,.55))"}, {transform:"scale(1)", filter:"drop-shadow(0 0 18px rgba(121,222,255,.22))"} ], {duration:2200, easing:"ease-in-out"}); }
+// Natural head/eye attention toward the pointer.
+stage.addEventListener("pointermove", e => { const r = stage.getBoundingClientRect(); const nx = (e.clientX - r.left) / r.width - .5; const ny = (e.clientY - r.top) / r.height - .5; const dx = nx * 4, dy = ny * 2; eyeL.setAttribute("cx", 283 + dx); eyeL.setAttribute("cy", 276 + dy); eyeR.setAttribute("cx", 317 + dx); eyeR.setAttribute("cy", 276 + dy); });
+stage.addEventListener("click", e => { if (e.target.closest("button,input")) return; moveTo(e.clientX, e.clientY, 1100); burst(10, 55); });
+document.querySelectorAll("[data-action]").forEach(btn => { btn.addEventListener("click", () => { const a = btn.dataset.action; if (a === "soul") soulBloom(); else setAction(a); }); });
+document.addEventListener("keydown", e => { const map = { "1":"greet","2":"glide","3":"spin","4":"pulse","5":"soul","6":"quantum" }; if (map[e.key]) setAction(map[e.key]); if (e.code === "Space") { e.preventDefault(); soulBloom(); } if (e.key === "Escape") { state.tx = 0; state.ty = 0; stage.classList.remove("is-floating","is-spinning","is-pulsing"); soulBreath(); } if (e.key.toLowerCase() === "b") bow(); });
+function speak(text) { if (!text) return; speech.textContent = text; speech.classList.add("show");
+if (!("speechSynthesis" in window)) {
+  setTimeout(() => speech.classList.remove("show"), 4200);
+  return;
+}
+
+speechSynthesis.cancel();
+const u = new SpeechSynthesisUtterance(text);
+u.rate = .94;
+u.pitch = 1.12;
+u.volume = 1;
+
+// Prefer a warm/feminine English voice when the browser provides one.
+const voices = speechSynthesis.getVoices();
+const preferred = voices.find(v =>
+  /en/i.test(v.lang) && /female|samantha|zira|ava|aria|susan|jenny/i.test(v.name)
+) || voices.find(v => /en/i.test(v.lang));
+if (preferred) u.voice = preferred;
+
+u.onstart = () => {
+  state.talking = true;
+  speech.classList.add("show");
+  mouth.animate([
+    {transform:"scaleY(1)"},
+    {transform:"scaleY(1.9)"},
+    {transform:"scaleY(.65)"},
+    {transform:"scaleY(1.45)"},
+    {transform:"scaleY(1)"}
+  ], {duration:420, iterations:Math.max(2, Math.ceil(text.length / 7)), easing:"ease-in-out"});
+  stage.classList.add("is-pulsing");
+};
+u.onend = () => {
+  state.talking = false;
+  st

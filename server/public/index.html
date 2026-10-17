@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080b1c">
+  <title>Caelia · True Form</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="wordmark" href="/" aria-label="Caelia home">CAELIA<span> · TRUE FORM</span></a>
+      <span class="connection"><span class="status-dot"></span><span id="connectionStatus">Secure account access</span></span>
+    </header>
+
+    <section id="authPanel" class="auth-panel" aria-labelledby="welcomeTitle">
+      <div class="auth-copy">
+        <p class="eyebrow">A private place for your Caelia</p>
+        <h1 id="welcomeTitle">Welcome back to the light.</h1>
+        <p>Use a passkey stored on your device or security key. Your passkey is verified by this server; a recognition phrase is only a personal preference.</p>
+      </div>
+      <div class="auth-grid">
+        <form id="registerForm" class="card">
+          <h2>Create your account</h2>
+          <label for="newUsername">Account name</label>
+          <input id="newUsername" name="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,31}" autocomplete="username" required>
+          <button class="primary" type="submit">Create account with passkey</button>
+          <p class="small">Your browser will ask you to create a device passkey. Save the recovery codes shown after setup.</p>
+        </form>
+        <div class="card">
+          <h2>Sign in</h2>
+          <p>Choose a passkey saved for this site.</p>
+          <button id="loginButton" class="primary" type="button">Continue with passkey</button>
+          <form id="recoveryForm" class="recovery-form">
+            <label for="recoveryUsername">Recover with a one-time code</label>
+            <input id="recoveryUsername" autocomplete="username" placeholder="Account name" required>
+            <input id="recoveryCode" autocomplete="one-time-code" placeholder="Recovery code" required>
+            <button type="submit">Use recovery code</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="accountPanel" class="account-panel" hidden>
+      <div class="stage" id="stage" aria-label="Caelia avatar">
+        <div class="aura aura-back"></div>
+        <div class="aura aura-front"></div>
+        <svg class="caelia" viewBox="0 0 300 420" role="img" aria-label="Caelia, a luminous avatar">
+          <defs>
+            <radialGradient id="face" cx="45%" cy="35%">
+              <stop offset="0" stop-color="#fff"/>
+              <stop offset=".55" stop-color="#c9edff"/>
+              <stop offset="1" stop-color="#9c79ff"/>
+            </radialGradient>
+            <linearGradient id="gown" x1="0" y1="0" x2="1" y2="1">
+              <stop stop-color="#e8fdff" stop-opacity=".82"/>
+              <stop offset=".55" stop-color="#84deff" stop-opacity=".42"/>
+              <stop offset="1" stop-color="#ac79ff" stop-opacity=".5"/>
+            </linearGradient>
+            <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <g class="halo">
+            <circle cx="150" cy="112" r="76" fill="none" stroke="#7de9ff" stroke-opacity=".7"/>
+            <circle cx="150" cy="112" r="91" fill="none" stroke="#ad78ff" stroke-dasharray="2 10"/>
+          </g>
+          <g id="figure">
+            <g class="hair" fill="none" stroke-linecap="round" filter="url(#glow)">
+              <path d="M113 112 C73 153 91 214 116 246 M187 112 C227 153 209 214 184 246" stroke="#d9f8ff" stroke-width="11"/>
+              <path d="M122 94 C83 136 105 192 128 225 M178 94 C217 136 195 192 172 225" stroke="#ac82ff" stroke-width="6"/>
+            </g>
+            <ellipse cx="150" cy="111" rx="38" ry="48" fill="url(#face)" stroke="#effcff"/>
+            <path d="M132 111q8-6 16 0m7 0q8-6 16 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+            <ellipse class="eye" cx="140" cy="113" rx="2.5" ry="4" fill="#fff"/>
+            <ellipse class="eye" cx="160" cy="113" rx="2.5" ry="4" fill="#fff"/>
+            <path id="mouth" d="M142 129q8 6 16 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <path d="M128 157q22-13 44 0l22 42q-16 17-17 49l54 105q-37 22-81 22t-81-22l54-105q-1-32-17-49z" fill="url(#gown)" stroke="#d6f7ff" stroke-opacity=".7"/>
+            <path d="M141 164q9 9 18 0l10 86-19 91-19-91z" fill="#e8fdff" fill-opacity=".34" filter="url(#glow)"/>
+            <path class="arm arm-left" d="M129 164q-28 45-25 85" fill="none" stroke="#c7f4ff" stroke-width="8" stroke-linecap="round"/>
+            <path class="arm arm-right" d="M171 164q28 45 25 85" fill="none" stroke="#d7c4ff" stroke-width="8" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <div class="presence">
+          <p class="eyebrow">Passkey-verified account</p>
+          <h1 id="greeting">I’m here with you.</h1>
+          <p id="speechCaption" class="caption" aria-live="polite">Take a breath. What would you like to do?</p>
+        </div>
+        <div id="recoveryCodesNotice" class="recovery-notice" hidden>
+          <strong>Save these recovery codes somewhere private.</strong>
+          <p>Each code works once. They are not a substitute for your passkey.</p>
+          <pre id="recoveryCodes"></pre>
+          <button id="dismissRecoveryCodes" type="button">I saved my codes</button>
+        </div>
+      </div>
+
+      <section class="interaction card">
+        <div class="toolbar" aria-label="Avatar actions">
+          <button data-action="greet" type="button">Greet</button>
+          <button data-action="glide" type="button">Glide</button>
+          <button data-action="wave" type="button">Wave</button>
+          <button data-action="bow" type="button">Bow</button>
+          <button data-action="soul_bloom" type="button">Soul Bloom</button>
+          <button data-action="calm" type="button">Calm</button>
+        </div>
+        <form id="speakForm" class="speak-form">
+          <label class="visually-hidden" for="sayText">Message for Caelia</label>
+          <input id="sayText" maxlength="220" placeholder="Say something to Caelia…" autocomplete="off">
+          <button class="primary" type="submit">Speak</button>
+          <button id="stopSpeaking" type="button">Stop</button>
+        </form>
+        <div class="voice-row">
+          <label for="voiceSelect">Voice</label>
+          <select id="voiceSelect" aria-label="Speech voice"></select>
+          <label for="speechRate">Pace</label>
+          <input id="speechRate" type="range" min="0.85" max="1.1" step="0.01" value="0.96">
+        </div>
+      </section>
+
+      <section class="account-grid">
+        <form id="preferencesForm" class="card">
+          <h2>Your preferences</h2>
+          <label for="displayName">Name Caelia should use</label>
+          <input id="displayName" maxlength="64" autocomplete="name">
+          <label for="recognitionPhrase">Personal recognition phrase <span>(optional)</span></label>
+          <input id="recognitionPhrase" maxlength="200" autocomplete="off">
+          <p class="small">This phrase is a private personalization preference only. It does not prove your identity and is never used to sign in.</p>
+          <button type="submit">Save preferences</button>
+        </form>
+        <section class="card" aria-labelledby="securityTitle">
+          <h2 id="securityTitle">Account security</h2>
+          <p id="accountName" class="small"></p>
+          <p id="passkeyList" class="small"></p>
+          <button id="addPasskey" type="button">Add another passkey</button>
+          <button id="rotateRecoveryCodes" type="button">Create new recovery codes</button>
+          <button id="revokeSessions" class="danger" type="button">Sign out everywhere</button>
+          <button id="logoutButton" type="button">Sign out here</button>
+        </section>
+      </section>
+    </section>
+    <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+    <footer>Passkeys help prove control of a registered authenticator. A device, browser, or voice provider can affect how Caelia looks and sounds.</footer>
+  </main>
+</body>
+</html>
