@@ -75,6 +75,10 @@ function openDatabase(databasePath) {
   const db = new Database(databasePath);
   if (databasePath !== ':memory:') chmodSync(databasePath, 0o600);
   db.pragma('journal_mode = WAL');
+  return initializeDatabase(db);
+}
+
+function initializeDatabase(db) {
   db.pragma('foreign_keys = ON');
   db.exec(`
     CREATE TABLE IF NOT EXISTS accounts (
@@ -114,6 +118,13 @@ function openDatabase(databasePath) {
     db.exec('ALTER TABLE sessions ADD COLUMN credential_db_id TEXT REFERENCES credentials(id) ON DELETE CASCADE');
   }
   db.exec('CREATE INDEX IF NOT EXISTS sessions_credential_db_id ON sessions(credential_db_id)');
+  if (db.pragma('user_version', { simple: true }) < 1) {
+    const migrateSessions = db.transaction(() => {
+      db.prepare('DELETE FROM sessions WHERE credential_db_id IS NULL').run();
+      db.pragma('user_version = 1');
+    });
+    migrateSessions.immediate();
+  }
   return db;
 }
 
@@ -159,10 +170,13 @@ function isRecord(value) {
 
 export function createApp({
   config = loadConfig(),
-  db = openDatabase(config.databasePath),
+  db: providedDatabase,
   webauthn,
   integrations = createIntegrations(),
 } = {}) {
+  const db = providedDatabase
+    ? initializeDatabase(providedDatabase)
+    : openDatabase(config.databasePath);
   const webAuthn = webauthn || {
     generateAuthenticationOptions,
     generateRegistrationOptions,
@@ -328,12 +342,13 @@ export function createApp({
   }
 
   function storeCredential(accountId, credential, transports) {
+    const id = randomUUID();
     db.prepare(`
       INSERT INTO credentials
         (id, account_id, credential_id, public_key, counter, transports, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(
-      randomUUID(),
+      id,
       accountId,
       credential.id,
       Buffer.from(credential.publicKey),
@@ -341,6 +356,7 @@ export function createApp({
       JSON.stringify(transports || credential.transports || []),
       Date.now(),
     );
+    return id;
   }
 
   async function registrationOptions(request, response, accountId = null) {
@@ -431,6 +447,7 @@ export function createApp({
       const accountCreated = !challenge.accountId;
       const registrationInfo = verification.registrationInfo;
       const codes = accountCreated ? newRecoveryCodes() : [];
+      let credentialDbId;
       const save = db.transaction(() => {
         if (accountCreated) {
           if (db.prepare('SELECT 1 FROM accounts LIMIT 1').get()) {
@@ -441,7 +458,7 @@ export function createApp({
           db.prepare('INSERT INTO accounts (id, username, created_at) VALUES (?, ?, ?)')
             .run(accountId, challenge.username, Date.now());
         }
-        storeCredential(
+        credentialDbId = storeCredential(
           accountId,
           registrationInfo.credential,
           request.body.response?.transports,
@@ -459,7 +476,7 @@ export function createApp({
       const account = db.prepare(
         'SELECT id, username, display_name, recognition_phrase FROM accounts WHERE id = ?',
       ).get(accountId);
-      createSession(response, accountId);
+      createSession(response, accountId, credentialDbId);
       return response.status(accountCreated ? 201 : 200).json({
         account: serializeAccount(account),
         recoveryCodes: accountCreated ? codes : undefined,

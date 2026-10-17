@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
 import test from 'node:test';
+import Database from 'better-sqlite3';
 import { createApp } from '../src/app.js';
 
 const origin = 'http://localhost:3000';
@@ -177,6 +178,38 @@ test('a passkey revoked during verification cannot create a session', async (t) 
   assert.equal(app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count, 0);
 });
 
+test('database migration clears pre-existing unbound sessions', (t) => {
+  const db = new Database(':memory:');
+  db.exec(`
+    CREATE TABLE accounts (id TEXT PRIMARY KEY, username TEXT NOT NULL UNIQUE, display_name TEXT NOT NULL DEFAULT '', recognition_phrase TEXT NOT NULL DEFAULT '', created_at INTEGER NOT NULL);
+    CREATE TABLE credentials (id TEXT PRIMARY KEY, account_id TEXT NOT NULL, credential_id TEXT NOT NULL UNIQUE, public_key BLOB NOT NULL, counter INTEGER NOT NULL, transports TEXT NOT NULL DEFAULT '[]', created_at INTEGER NOT NULL, last_used_at INTEGER);
+    CREATE TABLE recovery_codes (code_hash TEXT PRIMARY KEY, account_id TEXT NOT NULL, created_at INTEGER NOT NULL);
+    CREATE TABLE sessions (token_hash TEXT PRIMARY KEY, account_id TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL);
+    INSERT INTO accounts (id, username, created_at) VALUES ('account-id', 'alicia', 1);
+    INSERT INTO sessions (token_hash, account_id, created_at, expires_at) VALUES ('old-session', 'account-id', 1, 9999999999999);
+  `);
+  const app = createApp({
+    config: {
+      appOrigin: origin,
+      rpID: 'localhost',
+      rpName: 'Caelia',
+      databasePath: ':memory:',
+      port: 3000,
+      secureCookies: false,
+    },
+    db,
+    integrations: {
+      authorizeAvatarIntent: async () => true,
+      dispatchUnityIntent: async () => {},
+      generateReply: async () => '',
+    },
+  });
+  t.after(() => app.locals.close());
+
+  assert.equal(db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count, 0);
+  assert.equal(db.pragma('user_version', { simple: true }), 1);
+});
+
 test('passkey enrollment, private preferences, avatar intents, recovery, and session revocation work', async (t) => {
   const { request, app, calls } = await createHarness(t);
 
@@ -204,6 +237,10 @@ test('passkey enrollment, private preferences, avatar intents, recovery, and ses
   );
   assert.equal(
     app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count,
+    1,
+  );
+  assert.equal(
+    app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions WHERE credential_db_id = (SELECT id FROM credentials LIMIT 1)').get().count,
     1,
   );
 
