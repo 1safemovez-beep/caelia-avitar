@@ -178,6 +178,33 @@ test('a passkey revoked during verification cannot create a session', async (t) 
   assert.equal(app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count, 0);
 });
 
+test('revoking a passkey signs out sessions created by recovery codes', async (t) => {
+  const { request } = await createHarness(t);
+  await request('/api/auth/register/options', {
+    method: 'POST',
+    body: { username: 'alicia', enrollmentCode },
+  });
+  const registered = await request('/api/auth/register/verify', {
+    method: 'POST',
+    body: { id: 'test-credential-id', response: { transports: ['internal'] } },
+  });
+  await request('/api/auth/logout', { method: 'POST', body: {} });
+  const recovered = await request('/api/auth/recovery', {
+    method: 'POST',
+    body: { username: 'alicia', code: registered.json.recoveryCodes[0] },
+  });
+  assert.equal(recovered.response.status, 200);
+  const account = await request('/api/me');
+  assert.equal(account.response.status, 200);
+
+  const revoked = await request('/api/auth/passkeys/revoke', {
+    method: 'POST',
+    body: { id: account.json.passkeys[0].id },
+  });
+  assert.equal(revoked.response.status, 200);
+  assert.equal((await request('/api/me')).response.status, 401);
+});
+
 test('database migration clears pre-existing unbound sessions', (t) => {
   const db = new Database(':memory:');
   db.exec(`

@@ -315,7 +315,7 @@ function renderAccount(data) {
     revoke.type = 'button';
     revoke.textContent = 'Revoke';
     revoke.addEventListener('click', async () => {
-      if (!window.confirm('Revoke this passkey? A device using it will no longer be able to sign in.')) return;
+      if (!window.confirm('Revoke this passkey and sign out all sessions? You will need another passkey or recovery code to sign in again.')) return;
       try {
         await api('/api/auth/passkeys/revoke', { method: 'POST', body: { id: passkey.id } });
         try {

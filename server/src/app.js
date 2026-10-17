@@ -690,22 +690,31 @@ export function createApp({
     if (typeof credentialId !== 'string') {
       return response.status(400).json({ error: 'Choose a passkey to revoke.' });
     }
-    const credential = db.prepare(
-      'SELECT id FROM credentials WHERE id = ? AND account_id = ?',
-    ).get(credentialId, request.authenticated.id);
-    if (!credential) return response.status(404).json({ error: 'Passkey not found.' });
+    const revoke = db.transaction(() => {
+      const credential = db.prepare(
+        'SELECT id FROM credentials WHERE id = ? AND account_id = ?',
+      ).get(credentialId, request.authenticated.id);
+      if (!credential) return 'missing';
 
-    const credentialCount = db.prepare(
-      'SELECT COUNT(*) AS count FROM credentials WHERE account_id = ?',
-    ).get(request.authenticated.id).count;
-    const recoveryCodeCountForAccount = db.prepare(
-      'SELECT COUNT(*) AS count FROM recovery_codes WHERE account_id = ?',
-    ).get(request.authenticated.id).count;
-    if (credentialCount === 1 && recoveryCodeCountForAccount === 0) {
+      const credentialCount = db.prepare(
+        'SELECT COUNT(*) AS count FROM credentials WHERE account_id = ?',
+      ).get(request.authenticated.id).count;
+      const recoveryCodeCountForAccount = db.prepare(
+        'SELECT COUNT(*) AS count FROM recovery_codes WHERE account_id = ?',
+      ).get(request.authenticated.id).count;
+      if (credentialCount === 1 && recoveryCodeCountForAccount === 0) return 'last-factor';
+
+      db.prepare('DELETE FROM sessions WHERE account_id = ?').run(request.authenticated.id);
+      db.prepare('DELETE FROM credentials WHERE id = ? AND account_id = ?')
+        .run(credentialId, request.authenticated.id);
+      return 'revoked';
+    });
+    const result = revoke.immediate();
+    if (result === 'missing') return response.status(404).json({ error: 'Passkey not found.' });
+    if (result === 'last-factor') {
       return response.status(409).json({ error: 'Keep a passkey or recovery code available before revoking this one.' });
     }
-    db.prepare('DELETE FROM credentials WHERE id = ? AND account_id = ?')
-      .run(credentialId, request.authenticated.id);
+    clearCookie(response, sessionCookieName, secureCookies);
     return response.json({ message: 'Passkey revoked.' });
   });
 
