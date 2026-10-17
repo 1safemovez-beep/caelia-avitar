@@ -8,6 +8,8 @@ html = r'''
 �
 Caelia's True Form 
 
+<link rel="stylesheet" href="caelia_true_form.css">
+
 <section id="stage" class="scene">
   <div class="stars" id="stars"></div>
   <div class="aura aura-back" id="auraBack"></div>
@@ -169,6 +171,9 @@ Caelia's True Form
   </div>
   <div class="hint">Click the scene to move her · 1–6 actions · Space = soul pulse · Esc = calm</div>
 </section>
+
+<script src="caelia_true_form.js" defer></script>
+
 �
 
 �
