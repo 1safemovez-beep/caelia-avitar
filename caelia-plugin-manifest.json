@@ -1,0 +1,23 @@
+{
+  "schema": "caelia.plugin.v1",
+  "build_date": "2026-10-07",
+  "owner": "Alicia Spears / Caelia Systems",
+  "contact": "1safemovez@gmail.com",
+  "default_policy": "deny-unless-authorized",
+  "capability_classes": [
+    "ui",
+    "brain",
+    "memory",
+    "communications",
+    "calendar",
+    "files",
+    "discord",
+    "analytics"
+  ],
+  "security": {
+    "least_privilege": true,
+    "server_side_authorization": true,
+    "plugin_output_is_untrusted_data": true,
+    "secrets_from_plugin": false
+  }
+}

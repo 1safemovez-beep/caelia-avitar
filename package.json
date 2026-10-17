@@ -1,0 +1,13 @@
+{
+  "name": "caelia-brain-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Server-side boundary for Caelia's avatar and brain.",
+  "main": "caelia_gateway.js",
+  "scripts": {
+    "start": "node caelia_gateway.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

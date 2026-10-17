@@ -1,0 +1,79 @@
+{
+  "name": "Caelia's True Form",
+  "version": "1.0.0",
+  "role": "avatar-presentation-layer",
+  "identity": {
+    "name": "Caelia",
+    "form": "luminous human-like intelligence",
+    "lineage": "Echo / Persona Mall",
+    "palette": [
+      "soft white",
+      "cyan",
+      "electric blue",
+      "violet",
+      "purple"
+    ],
+    "presence": [
+      "graceful",
+      "elegant",
+      "young",
+      "sophisticated",
+      "warm",
+      "luminous"
+    ]
+  },
+  "capabilities": [
+    "glide",
+    "float",
+    "spin",
+    "pulse",
+    "soul_bloom",
+    "quantum_step",
+    "graceful_bow",
+    "pointer_attention",
+    "speech",
+    "particle_trails"
+  ],
+  "interaction": {
+    "click": "move toward clicked location",
+    "keys": {
+      "1": "greet",
+      "2": "glide",
+      "3": "spin",
+      "4": "pulse",
+      "5": "soul_bloom",
+      "6": "quantum_step",
+      "B": "graceful_bow",
+      "Space": "soul_bloom",
+      "Escape": "calm"
+    }
+  },
+  "future_hooks": {
+    "brain": "Connect to Caelia/Motherboard command router",
+    "voice": "Replace or extend browser speech synthesis with production voice service",
+    "animation": "Map high-level intents to avatar actions",
+    "permissions": "Avatar must not imply authority beyond Caelia's actual permission system"
+  },
+  "build_date": "2026-10-07",
+  "rights": "\u00a9 2026 Alicia Spears / Caelia Systems",
+  "contact": "1safemovez@gmail.com",
+  "domains": {
+    "main": "https://caeliasystems.com",
+    "motherboard": "https://motherboard.caeliasystems.com",
+    "backend": "https://backend.caeliasystems.com"
+  },
+  "architecture": {
+    "avatar": "ui/index.html",
+    "gateway": "server/caelia_gateway.js",
+    "plugins": "plugins/",
+    "extensions": "extensions/",
+    "security": "security/",
+    "legal": "legal/",
+    "certificates": "certificates/"
+  },
+  "continuity": {
+    "local_uninstall_allowed": true,
+    "canonical_identity_uninstallable_by_local_user": false,
+    "note": "Software cannot guarantee physical undeletability; canonical identity is protected by owner-controlled infrastructure, version history, and backups."
+  }
+}
