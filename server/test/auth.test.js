@@ -10,6 +10,7 @@ const enrollmentCode = 'a'.repeat(40);
 
 function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {}) {
   const calls = [];
+  let registrationVerificationHook = null;
   let authenticationVerificationHook = null;
   const webauthn = {
     async generateRegistrationOptions() {
@@ -18,6 +19,7 @@ function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {})
     async verifyRegistrationResponse(options) {
       assert.equal(options.expectedChallenge, 'registration-challenge');
       assert.equal(options.expectedOrigin, origin);
+      if (registrationVerificationHook) await registrationVerificationHook();
       return {
         verified: true,
         registrationInfo: {
@@ -113,6 +115,9 @@ function createHarness(t, { enrollmentCodeHash: configuredEnrollmentHash } = {})
         request,
         app,
         calls,
+        setRegistrationVerificationHook(hook) {
+          registrationVerificationHook = hook;
+        },
         setAuthenticationVerificationHook(hook) {
           authenticationVerificationHook = hook;
         },
@@ -176,6 +181,34 @@ test('a passkey revoked during verification cannot create a session', async (t) 
   });
   assert.equal(login.response.status, 401);
   assert.equal(app.locals.db.prepare('SELECT COUNT(*) AS count FROM sessions').get().count, 0);
+});
+
+test('a passkey cannot be enrolled after its authorizing session is revoked', async (t) => {
+  const { request, app, setRegistrationVerificationHook } = await createHarness(t);
+  await request('/api/auth/register/options', {
+    method: 'POST',
+    body: { username: 'alicia', enrollmentCode },
+  });
+  await request('/api/auth/register/verify', {
+    method: 'POST',
+    body: { id: 'test-credential-id', response: { transports: ['internal'] } },
+  });
+  const options = await request('/api/auth/passkey/register/options', {
+    method: 'POST',
+    body: {},
+  });
+  assert.equal(options.response.status, 200);
+
+  setRegistrationVerificationHook(() => {
+    app.locals.db.prepare('DELETE FROM sessions WHERE account_id = ?')
+      .run(app.locals.db.prepare('SELECT id FROM accounts').get().id);
+  });
+  const result = await request('/api/auth/passkey/register/verify', {
+    method: 'POST',
+    body: { id: 'second-credential-id', response: { transports: ['internal'] } },
+  });
+  assert.equal(result.response.status, 401);
+  assert.equal(app.locals.db.prepare('SELECT COUNT(*) AS count FROM credentials').get().count, 1);
 });
 
 test('revoking a passkey signs out sessions created by recovery codes', async (t) => {

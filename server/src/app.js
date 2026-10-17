@@ -516,11 +516,22 @@ export function createApp({
       if (!verification.verified || !verification.registrationInfo) {
         return response.status(400).json({ error: 'Passkey registration could not be verified.' });
       }
-      storeCredential(
-        request.authenticated.id,
-        verification.registrationInfo.credential,
-        request.body.response?.transports,
-      );
+      const finalizeRegistration = db.transaction(() => {
+        const activeSession = db.prepare(`
+          SELECT 1 FROM sessions
+          WHERE token_hash = ? AND account_id = ? AND expires_at > ?
+        `).get(request.authenticated.tokenHash, request.authenticated.id, Date.now());
+        if (!activeSession) return false;
+        storeCredential(
+          request.authenticated.id,
+          verification.registrationInfo.credential,
+          request.body.response?.transports,
+        );
+        return true;
+      });
+      if (!finalizeRegistration.immediate()) {
+        return response.status(401).json({ error: 'Your session expired or was revoked. Sign in again before adding a passkey.' });
+      }
       return response.status(201).json({ message: 'Passkey added.' });
     } catch (error) {
       if (error?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
