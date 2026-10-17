@@ -1,5 +1,5 @@
 import { createServer } from 'node:http';
-import { createApp, loadConfig } from './app.js';
+import { createApp, loadConfig } from './src/app.js';
 
 const config = loadConfig();
 const app = createApp({ config });

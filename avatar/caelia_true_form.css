@@ -82,10 +82,12 @@ h2 { margin-bottom: 15px; font-size: 1.12rem; font-weight: 500; }
 .aura { position: absolute; width: min(64vw, 460px); aspect-ratio: 1; border-radius: 50%; pointer-events: none; }
 .aura-back { background: radial-gradient(circle, rgb(97 204 255 / 18%), rgb(161 109 255 / 10%) 42%, transparent 70%); filter: blur(18px); animation: aura-breathe 7s ease-in-out infinite; }
 .aura-front { width: min(38vw, 280px); background: radial-gradient(circle, rgb(220 249 255 / 12%), rgb(122 181 255 / 8%) 52%, transparent 72%); filter: blur(14px); animation: aura-breathe 5.7s ease-in-out -2s infinite; }
-.caelia { position: absolute; top: 10px; left: 50%; width: min(330px, 76vw); height: 430px; overflow: visible; transform: translateX(-50%); }
+.caelia { position: absolute; top: 10px; left: 50%; width: min(330px, 76vw); height: 430px; overflow: visible; translate: var(--offset-x, 0px) var(--offset-y, 0px); transform: translateX(-50%); transition: translate var(--motion-duration, 1.8s) cubic-bezier(.22, .8, .25, 1); will-change: translate; }
 #figure { transform-box: fill-box; transform-origin: center 48%; animation: float 6.4s cubic-bezier(.45, 0, .55, 1) infinite; }
 .halo { transform-box: fill-box; transform-origin: center; animation: halo-turn 46s linear infinite; }
 .hair { transform-box: fill-box; transform-origin: top center; animation: hair-flow 6.8s ease-in-out infinite alternate; }
+#mouth { transform-box: fill-box; transform-origin: center; }
+.stage.is-speaking #mouth { animation: mouth-talk .42s ease-in-out infinite; }
 .gown-flow { transform-origin: center; }
 .presence { position: absolute; right: 18px; bottom: 22px; left: 18px; z-index: 1; text-align: center; pointer-events: none; }
 .presence .eyebrow { margin-bottom: 8px; font-size: .63rem; }
@@ -97,7 +99,11 @@ h2 { margin-bottom: 15px; font-size: 1.12rem; font-weight: 500; }
 .stage.is-blooming .halo { animation: bloom-halo 1.5s ease-out; }
 .stage.is-bowing #figure { animation: bow 1.6s cubic-bezier(.22, .8, .25, 1); }
 .stage.is-waving .arm-right { transform-box: fill-box; transform-origin: 10% 10%; animation: wave 1.15s ease-in-out 2; }
+.stage.is-walking #figure { animation: walk 1.2s ease-in-out 2; }
+.stage.is-walking .arm-left { transform-box: fill-box; transform-origin: top center; animation: arm-walk .6s ease-in-out 4 alternate; }
+.stage.is-walking .arm-right { transform-box: fill-box; transform-origin: top center; animation: arm-walk .6s ease-in-out 4 alternate-reverse; }
 .stage.is-celebrating #figure { animation: celebrate 1.5s ease-in-out; }
+.stage.is-quantum #figure { animation: quantum .95s ease-in-out; }
 .toolbar { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .speak-form { display: flex; gap: 8px; margin-top: 15px; }
 .speak-form input { flex: 1; }
@@ -122,6 +128,10 @@ footer { padding: 18px 0 28px; color: #8295ad; font-size: .75rem; line-height: 1
 @keyframes bloom-halo { 0% { opacity: .55; transform: scale(.88); } 45% { opacity: 1; transform: scale(1.16); } 100% { opacity: .85; transform: scale(1); } }
 @keyframes bow { 0%, 100% { transform: translateY(0) rotate(0); } 35% { transform: translateY(9px) rotate(1.5deg); } 62% { transform: translateY(13px) rotate(.2deg); } }
 @keyframes wave { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-18deg); } 52% { transform: rotate(11deg); } 76% { transform: rotate(-10deg); } }
+@keyframes arm-walk { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+@keyframes walk { 0%, 100% { transform: translateY(0) rotate(0); } 28% { transform: translateY(-3px) rotate(-.45deg); } 72% { transform: translateY(-2px) rotate(.45deg); } }
+@keyframes mouth-talk { 0%, 100% { transform: scaleY(.8); } 45% { transform: scaleY(1.5); } 72% { transform: scaleY(1.05); } }
+@keyframes quantum { 0%, 25%, 100% { opacity: 1; filter: drop-shadow(0 0 15px #a9eeff); } 48%, 66% { opacity: .12; filter: drop-shadow(0 0 32px #b794ff); } }
 @keyframes celebrate { 0%, 100% { transform: translateY(0) scale(1); } 35% { transform: translateY(-8px) scale(1.025); } 68% { transform: translateY(-3px) scale(1.01); } }
 @media (max-width: 680px) {
   .shell { width: min(100% - 24px, 520px); }

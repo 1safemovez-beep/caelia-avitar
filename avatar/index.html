@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080b1c">
   <title>Caelia · True Form</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
+  <link rel="stylesheet" href="/caelia_true_form.css">
+  <script src="/config.js"></script>
+  <script src="/caelia_true_form.js" defer></script>
 </head>
 <body>
   <main class="shell">
@@ -23,11 +24,13 @@
       </div>
       <div class="auth-grid">
         <form id="registerForm" class="card">
-          <h2>Create your account</h2>
+          <h2>Set up the owner account</h2>
+          <label for="enrollmentCode">One-time enrollment code</label>
+          <input id="enrollmentCode" name="enrollmentCode" type="password" minlength="32" autocomplete="off" required>
           <label for="newUsername">Account name</label>
           <input id="newUsername" name="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,31}" autocomplete="username" required>
-          <button class="primary" type="submit">Create account with passkey</button>
-          <p class="small">Your browser will ask you to create a device passkey. Save the recovery codes shown after setup.</p>
+          <button class="primary" type="submit">Create owner account with passkey</button>
+          <p class="small">The operator provides this code out of band. Registration closes after the first account is created. Your browser will ask you to create a device passkey; save the recovery codes shown after setup.</p>
         </form>
         <div class="card">
           <h2>Sign in</h2>
@@ -110,8 +113,10 @@
           <label class="visually-hidden" for="sayText">Message for Caelia</label>
           <input id="sayText" maxlength="220" placeholder="Say something to Caelia…" autocomplete="off">
           <button class="primary" type="submit">Speak</button>
+          <button id="listenButton" type="button" hidden>Use microphone</button>
           <button id="stopSpeaking" type="button">Stop</button>
         </form>
+        <p id="speechInputNotice" class="small" hidden>Browser speech recognition may use your browser provider’s speech service.</p>
         <div class="voice-row">
           <label for="voiceSelect">Voice</label>
           <select id="voiceSelect" aria-label="Speech voice"></select>

@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID, createHash, timingSafeEqual } from 'node:crypto';
-import { mkdirSync } from 'node:fs';
+import { chmodSync, mkdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Database from 'better-sqlite3';
@@ -12,10 +12,9 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from '@simplewebauthn/server';
+import { createIntegrations } from './integrations.js';
 
-const publicDirectory = fileURLToPath(new URL('../public/', import.meta.url));
-const sessionCookieName = 'caelia_session';
-const challengeCookieName = 'caelia_challenge';
+const avatarDirectory = fileURLToPath(new URL('../../avatar/', import.meta.url));
 const sessionLifetimeSeconds = 7 * 24 * 60 * 60;
 const challengeLifetimeMs = 5 * 60 * 1000;
 const recoveryCodeCount = 10;
@@ -39,22 +38,42 @@ export function loadConfig(env = process.env) {
     throw new Error('RP_ID must be the APP_ORIGIN hostname or one of its parent domains.');
   }
 
+  const port = Number(env.PORT || 3000);
+  if (!Number.isInteger(port) || port < 1 || port > 65535) {
+    throw new Error('PORT must be an integer between 1 and 65535.');
+  }
+  if (env.INITIAL_ENROLLMENT_CODE && env.INITIAL_ENROLLMENT_CODE.length < 32) {
+    throw new Error('INITIAL_ENROLLMENT_CODE must contain at least 32 characters.');
+  }
+
   return {
     appOrigin: appUrl.origin,
     rpID,
     rpName: env.RP_NAME || 'Caelia',
     databasePath: path.resolve(env.DATABASE_PATH || './data/caelia.sqlite'),
-    port: Number(env.PORT || 3000),
+    port,
     secureCookies: appUrl.protocol === 'https:',
+    enrollmentCodeHash: env.INITIAL_ENROLLMENT_CODE
+      ? createHash('sha256').update(env.INITIAL_ENROLLMENT_CODE).digest('hex')
+      : null,
   };
 }
 
 function openDatabase(databasePath) {
   if (databasePath !== ':memory:') {
-    mkdirSync(path.dirname(databasePath), { recursive: true });
+    const relativePath = path.relative(avatarDirectory, path.resolve(databasePath));
+    if (relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath))) {
+      throw new Error('DATABASE_PATH must be outside the avatar web directory.');
+    }
+    const directory = path.dirname(databasePath);
+    mkdirSync(directory, { recursive: true, mode: 0o700 });
+    if (process.platform !== 'win32' && (statSync(directory).mode & 0o077) !== 0) {
+      throw new Error('DATABASE_PATH parent directory must be private (mode 0700).');
+    }
   }
 
   const db = new Database(databasePath);
+  if (databasePath !== ':memory:') chmodSync(databasePath, 0o600);
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   db.exec(`
@@ -132,7 +151,12 @@ function isRecord(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
 
-export function createApp({ config = loadConfig(), db = openDatabase(config.databasePath), webauthn } = {}) {
+export function createApp({
+  config = loadConfig(),
+  db = openDatabase(config.databasePath),
+  webauthn,
+  integrations = createIntegrations(),
+} = {}) {
   const webAuthn = webauthn || {
     generateAuthenticationOptions,
     generateRegistrationOptions,
@@ -142,6 +166,9 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
   const app = express();
   const challengeStore = new Map();
   const secureCookies = config.secureCookies;
+  const sessionCookieName = secureCookies ? '__Host-caelia_session' : 'caelia_session';
+  const challengeCookieName = secureCookies ? '__Host-caelia_challenge' : 'caelia_challenge';
+  const enrollmentCodeHash = config.enrollmentCodeHash || null;
   const tokenHash = (token) => createHash('sha256').update(token).digest('hex');
 
   const apiLimiter = rateLimit({
@@ -318,6 +345,17 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
 
     let userId = accountId;
     if (!accountId) {
+      if (db.prepare('SELECT 1 FROM accounts LIMIT 1').get()) {
+        return response.status(409).json({ error: 'New account registration is closed.' });
+      }
+      const enrollmentCode = typeof request.body?.enrollmentCode === 'string'
+        ? request.body.enrollmentCode
+        : '';
+      const submittedHash = createHash('sha256').update(enrollmentCode).digest();
+      const expectedHash = enrollmentCodeHash ? Buffer.from(enrollmentCodeHash, 'hex') : Buffer.alloc(32);
+      if (!enrollmentCodeHash || !timingSafeEqual(submittedHash, expectedHash)) {
+        return response.status(403).json({ error: 'The enrollment code was not accepted.' });
+      }
       if (db.prepare('SELECT 1 FROM accounts WHERE username = ?').get(username)) {
         return response.status(409).json({ error: 'That account name is unavailable.' });
       }
@@ -389,6 +427,11 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
       const codes = accountCreated ? newRecoveryCodes() : [];
       const save = db.transaction(() => {
         if (accountCreated) {
+          if (db.prepare('SELECT 1 FROM accounts LIMIT 1').get()) {
+            const error = new Error('New account registration is closed.');
+            error.code = 'ACCOUNT_REGISTRATION_CLOSED';
+            throw error;
+          }
           db.prepare('INSERT INTO accounts (id, username, created_at) VALUES (?, ?, ?)')
             .run(accountId, challenge.username, Date.now());
         }
@@ -416,6 +459,9 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
         recoveryCodes: accountCreated ? codes : undefined,
       });
     } catch (error) {
+      if (error?.code === 'ACCOUNT_REGISTRATION_CLOSED') {
+        return response.status(409).json({ error: 'New account registration is closed.' });
+      }
       if (error?.code === 'SQLITE_CONSTRAINT_UNIQUE') {
         return response.status(409).json({ error: 'That account name or passkey is already registered.' });
       }
@@ -619,7 +665,7 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
     response.status(204).end();
   });
 
-  app.post('/api/avatar/intent', requireAccount, (request, response) => {
+  app.post('/api/avatar/intent', requireAccount, async (request, response, next) => {
     const { action, target, duration, text } = request.body || {};
     const actions = new Set([
       'greet', 'glide', 'walk', 'turn', 'spin', 'wave', 'bow', 'pulse',
@@ -644,7 +690,7 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
     if (text !== undefined && (typeof text !== 'string' || text.length > 220)) {
       return response.status(400).json({ error: 'Speech text must be at most 220 characters.' });
     }
-    return response.json({
+    const intent = {
       action,
       target: target || null,
       duration: duration || 1200,
@@ -653,10 +699,26 @@ export function createApp({ config = loadConfig(), db = openDatabase(config.data
         username: request.authenticated.account.username,
         displayName: request.authenticated.account.display_name,
       },
-    });
+    };
+    try {
+      if (!await integrations.authorizeAvatarIntent(intent)) {
+        return response.status(403).json({ error: 'The Caelia backend did not approve this action.' });
+      }
+      if (action === 'speak') {
+        intent.text = await integrations.generateReply({
+          text: intent.text,
+          username: intent.account.username,
+          displayName: intent.account.displayName,
+        });
+      }
+      await integrations.dispatchUnityIntent(intent);
+      return response.json(intent);
+    } catch (error) {
+      return next(error);
+    }
   });
 
-  app.use(express.static(publicDirectory, { index: 'index.html', fallthrough: true }));
+  app.use(express.static(avatarDirectory, { index: 'index.html', fallthrough: true }));
   app.use((_request, response) => response.status(404).json({ error: 'Not found.' }));
   app.use((error, _request, response, _next) => {
     if (response.headersSent) return;

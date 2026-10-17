@@ -4,9 +4,9 @@
   "private": true,
   "description": "Passkey authentication and account preferences for Caelia",
   "type": "module",
-  "main": "src/server.js",
+  "main": "caelia_gateway.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node caelia_gateway.js",
     "test": "node --test"
   },
   "engines": {
