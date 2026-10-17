@@ -1,0 +1,20 @@
+{
+  "project": "Caelia's True Form",
+  "build_date": "2026-10-07",
+  "owner": "Alicia Spears / Caelia Systems",
+  "contact": "1safemovez@gmail.com",
+  "domain": "caeliasystems.com",
+  "components": [
+    "avatar UI",
+    "server gateway scaffold",
+    "plugin contract",
+    "extension contract",
+    "security architecture",
+    "legal scaffolds",
+    "certificate plan",
+    "configuration template",
+    "architecture map"
+  ],
+  "continuity_policy": "Local uninstall/deletion is distinct from canonical project identity and owner-controlled backups.",
+  "production_status": "scaffold \u2014 security/legal review required before public production"
+}

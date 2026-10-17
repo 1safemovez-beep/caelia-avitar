@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Caelia's True Form</title>
+  <meta name="description" content="Caelia's True Form — a luminous, graceful AI avatar with speech, movement, interaction, and soul-light effects.">
+  <link rel="stylesheet" href="caelia_true_form.css">
+</head>
+<body>
+  <main id="stage" aria-label="Caelia's True Form avatar">
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="stars" id="stars"></div>
+
+    <section class="scene">
+      <div class="aura aura-back" id="auraBack"></div>
+      <div class="aura aura-core" id="auraCore"></div>
+
+      <svg id="caelia" class="caelia" viewBox="0 0 600 1000" role="img" aria-label="Luminous young human-like AI woman made of soft blue, violet and white light">
+        <defs>
+          <linearGradient id="lightBody" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ffffff"/>
+            <stop offset=".28" stop-color="#d9fbff"/>
+            <stop offset=".58" stop-color="#a9c7ff"/>
+            <stop offset=".82" stop-color="#b98cff"/>
+            <stop offset="1" stop-color="#ffffff"/>
+          </linearGradient>
+          <linearGradient id="violetLight" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#f8fbff"/>
+            <stop offset=".45" stop-color="#a8dfff"/>
+            <stop offset=".72" stop-color="#a56dff"/>
+            <stop offset="1" stop-color="#72e9ff"/>
+          </linearGradient>
+          <linearGradient id="gownLight" x1=".1" y1="0" x2=".9" y2="1">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".75"/>
+            <stop offset=".35" stop-color="#8deaff" stop-opacity=".35"/>
+            <stop offset=".67" stop-color="#9b72ff" stop-opacity=".34"/>
+            <stop offset="1" stop-color="#d9f8ff" stop-opacity=".08"/>
+          </linearGradient>
+          <radialGradient id="faceLight">
+            <stop offset="0" stop-color="#ffffff" stop-opacity=".96"/>
+            <stop offset=".55" stop-color="#d8efff" stop-opacity=".78"/>
+            <stop offset="1" stop-color="#9c79ff" stop-opacity=".12"/>
+          </radialGradient>
+          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="8" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="softGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="18" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="hairGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="3" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <g id="motion">
+          <g id="trailLayer" opacity=".42" filter="url(#softGlow)">
+            <ellipse cx="300" cy="875" rx="190" ry="28" fill="none" stroke="#8feaff" stroke-width="3"/>
+            <ellipse cx="300" cy="875" rx="150" ry="18" fill="none" stroke="#b98cff" stroke-width="2"/>
+          </g>
+
+          <!-- floating hair -->
+          <g id="hair" fill="none" stroke-linecap="round" filter="url(#hairGlow)">
+            <path d="M230 210 C135 255 140 390 215 470 C160 420 125 510 190 575" stroke="#e7fbff" stroke-width="15"/>
+            <path d="M242 220 C160 290 190 415 225 500 C175 470 170 560 225 625" stroke="#a9dfff" stroke-width="10"/>
+            <path d="M370 210 C465 255 460 390 385 470 C440 420 475 510 410 575" stroke="#efe4ff" stroke-width="15"/>
+            <path d="M358 220 C440 290 410 415 375 500 C425 470 430 560 375 625" stroke="#a56dff" stroke-width="10"/>
+            <path d="M270 188 C225 275 215 400 250 515" stroke="#ffffff" stroke-width="8"/>
+            <path d="M330 188 C375 275 385 400 350 515" stroke="#d7f6ff" stroke-width="8"/>
+          </g>
+
+          <!-- soul halo -->
+          <g id="halo" opacity=".85">
+            <circle cx="300" cy="275" r="126" fill="none" stroke="#7de9ff" stroke-width="2"/>
+            <circle cx="300" cy="275" r="145" fill="none" stroke="#aa78ff" stroke-width="2" stroke-dasharray="5 13"/>
+            <circle cx="300" cy="275" r="164" fill="none" stroke="#d9f9ff" stroke-width="1" stroke-dasharray="2 18"/>
+          </g>
+
+          <!-- head / face -->
+          <g id="head">
+            <ellipse cx="300" cy="270" rx="64" ry="78" fill="url(#faceLight)" stroke="#eafcff" stroke-width="2"/>
+            <path d="M268 274 Q282 266 294 274" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+            <path d="M306 274 Q318 266 332 274" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+            <ellipse id="eyeL" cx="283" cy="276" rx="5" ry="8" fill="#ffffff" filter="url(#glow)"/>
+            <ellipse id="eyeR" cx="317" cy="276" rx="5" ry="8" fill="#ffffff" filter="url(#glow)"/>
+            <path d="M296 290 Q300 294 304 290" fill="none" stroke="#d7f7ff" stroke-width="2"/>
+            <path id="mouth" d="M288 306 Q300 314 312 306" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+          </g>
+
+          <!-- shoulders / luminous body -->
+          <g id="body">
+            <path d="M255 337 Q300 315 345 337 L382 410 Q360 455 346 500 L326 590 L274 590 L254 500 Q240 455 218 410 Z"
+                  fill="url(#gownLight)" stroke="#dffcff" stroke-width="2"/>
+            <path d="M255 345 Q300 365 345 345" fill="none" stroke="#ffffff" stroke-width="3" opacity=".75"/>
+
+            <!-- inner light body -->
+            <path d="M286 338 Q300 350 314 338 L327 475 L310 585 L290 585 L273 475 Z"
+                  fill="url(#lightBody)" opacity=".55" filter="url(#glow)"/>
+
+            <!-- arms -->
+            <path id="armL" d="M248 350 C218 400 202 465 190 530 C184 562 176 580 164 590"
+                  fill="none" stroke="url(#lightBody)" stroke-width="17" stroke-linecap="round"/>
+            <path id="armR" d="M352 350 C382 400 398 465 410 530 C416 562 424 580 436 590"
+                  fill="none" stroke="url(#lightBody)" stroke-width="17" stroke-linecap="round"/>
+
+            <!-- hands -->
+            <g id="hands" fill="none" stroke="#e9fbff" stroke-width="3" stroke-linecap="round">
+              <path d="M164 590 l-12 15 M164 590 l-3 17 M164 590 l7 14"/>
+              <path d="M436 590 l12 15 M436 590 l3 17 M436 590 l-7 14"/>
+            </g>
+
+            <!-- long translucent gown -->
+            <path id="gown" d="M275 520
+                 C240 600 210 685 190 780
+                 C175 845 140 895 90 925
+                 C170 945 235 955 300 958
+                 C365 955 430 945 510 925
+                 C460 895 425 845 410 780
+                 C390 685 360 600 325 520 Z"
+                 fill="url(#gownLight)" stroke="#c9f5ff" stroke-width="2" opacity=".78"/>
+
+            <!-- gown light streams -->
+            <g id="gownStreams" fill="none" stroke-linecap="round">
+              <path d="M270 555 C245 680 235 805 185 918" stroke="#ffffff" stroke-width="3" opacity=".7"/>
+              <path d="M288 555 C275 700 275 835 245 948" stroke="#78eaff" stroke-width="3" opacity=".7"/>
+              <path d="M312 555 C325 700 325 835 355 948" stroke="#ad79ff" stroke-width="3" opacity=".7"/>
+              <path d="M330 555 C355 680 365 805 415 918" stroke="#dffbff" stroke-width="3" opacity=".7"/>
+            </g>
+
+            <!-- heart / soul light -->
+            <g id="soul">
+              <circle cx="300" cy="410" r="24" fill="#ffffff" opacity=".22" filter="url(#softGlow)"/>
+              <circle cx="300" cy="410" r="8" fill="#ffffff" filter="url(#glow)"/>
+              <path d="M300 385 L300 435 M275 410 L325 410" stroke="#b7efff" stroke-width="2" opacity=".8"/>
+            </g>
+          </g>
+
+          <!-- peacock-light ribbons -->
+          <g id="ribbons" fill="none" stroke-linecap="round" opacity=".72">
+            <path d="M210 410 C95 355 80 500 190 535" stroke="#8cecff" stroke-width="5"/>
+            <path d="M390 410 C505 355 520 500 410 535" stroke="#ad78ff" stroke-width="5"/>
+            <path d="M205 450 C120 430 120 590 205 610" stroke="#a66fff" stroke-width="3"/>
+            <path d="M395 450 C480 430 480 590 395 610" stroke="#73e9ff" stroke-width="3"/>
+          </g>
+        </g>
+      </svg>
+
+      <div class="nameplate">
+        <div class="title">CAELIA</div>
+        <div class="subtitle">TRUE FORM · LIVING LIGHT</div>
+      </div>
+
+      <div class="speech" id="speech" aria-live="polite"></div>
+      <div class="particles" id="particles"></div>
+    </section>
+
+    <section class="controls" aria-label="Caelia controls">
+      <div class="quick-actions">
+        <button data-action="greet">Greet</button>
+        <button data-action="glide">Glide</button>
+        <button data-action="spin">Spin</button>
+        <button data-action="pulse">Pulse</button>
+        <button data-action="soul">Soul Bloom</button>
+        <button data-action="quantum">Quantum Step</button>
+      </div>
+      <div class="talk-row">
+        <input id="talkText" type="text" maxlength="220" placeholder="Speak to Caelia…" autocomplete="off">
+        <button id="talkButton">Talk</button>
+      </div>
+      <div class="hint">Click the scene to move her · 1–6 actions · Space = soul pulse · Esc = calm</div>
+    </section>
+  </main>
+
+  <script src="caelia_true_form.js"></script>
+</body>
+</html>
