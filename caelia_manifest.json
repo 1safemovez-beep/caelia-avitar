@@ -63,13 +63,32 @@
     "backend": "https://backend.caeliasystems.com"
   },
   "architecture": {
-    "avatar": "ui/index.html",
-    "gateway": "server/caelia_gateway.js",
-    "plugins": "plugins/",
-    "extensions": "extensions/",
-    "security": "security/",
-    "legal": "legal/",
-    "certificates": "certificates/"
+    "avatar": {
+      "html": "index.html",
+      "styles": "caelia_true_form.css",
+      "script": "caelia_true_form.js",
+      "reference": "reference/Echo Persona Mall card.jpg"
+    },
+    "gateway": "caelia_gateway.js",
+    "gateway_config": "caelia.env.example",
+    "plugins": {
+      "manifest": "caelia-plugin-manifest.json",
+      "specification": "PLUGIN_SPEC.md"
+    },
+    "extensions": "EXTENSION_SPEC.md",
+    "security": {
+      "architecture": "SECURITY_ARCHITECTURE.md",
+      "contact": "SECURITY_CONTACT.md"
+    },
+    "legal": [
+      "LEGAL_NOTICES.md",
+      "TERMS_SCAFFOLD.md",
+      "PRIVACY_POLICY_SCAFFOLD.md"
+    ],
+    "certificates": "CERTIFICATE_PLAN.md",
+    "build_manifest": "BUILD_MANIFEST.json",
+    "architecture_map": "ARCHITECTURE_MAP.md",
+    "verification": "VERIFY_PACKAGE.md"
   },
   "continuity": {
     "local_uninstall_allowed": true,
