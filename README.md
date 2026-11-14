@@ -8,7 +8,7 @@ A self-contained, browser-based prototype for Caelia's luminous avatar.
 - `caelia_true_form.css` — neon-light visual system and responsive layout
 - `caelia_true_form.js` — movement, speech, interaction, particles, and actions
 - `caelia_manifest.json` — identity/config metadata for future integration
-- `reference/Echo Persona Mall card.webp` — the original Echo reference image
+- `reference/Echo Persona Mall card.jpg` — the original Echo reference image
 
 ## Visual identity
 
